@@ -23,9 +23,10 @@ package cvapp;
 */
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.JFrame;
 
 
-class headerFrame extends Frame implements ActionListener {
+class headerFrame extends JFrame implements ActionListener {
    neulucData cell;
    TextArea ta;
    TextField tf;

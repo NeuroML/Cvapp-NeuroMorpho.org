@@ -1,0 +1,185 @@
+
+<project name="CvappNMO" default="run" basedir=".">
+
+    <description>Cvapp converted for use on NeuroMorpho.Org</description>
+
+
+    <target name="init" description="Initialises project, makes build dir"> 
+            
+      <property name="main.jar" value="cvapp.jar"/>
+      <property name="src.dir" value="src"/>
+      <property name="test.dir" value="test"/>
+      <property name="build.dir" value="build"/>
+      
+      <property name="temp.dir" value="temp/"/>
+      
+      <property name="main.class" value="cvapp.main"/>
+	
+
+      <path id="run.class.path">
+	      <pathelement location="${main.jar}"/>
+      </path>
+
+      <path id="test.class.path">
+          <path refid="run.class.path"/>
+      </path>
+
+      <echo>This is initialising CvappNMO</echo>
+
+      <mkdir dir="${build.dir}"/>
+      
+    </target>
+
+
+
+    <target name="compile" depends="init"
+            description="Compiles the source code">
+
+        <echo>Compiling CvappNMO code</echo>
+        
+        <javac srcdir="${src.dir}"
+               destdir="${build.dir}"
+               debug="true"
+               optimize="${optimize}"
+               compiler="modern"
+               source="1.5"
+               target="1.5"
+               includeantruntime="false">
+             <classpath refid="run.class.path"/>
+        </javac>
+    </target>
+
+
+  <target name="compiletests" depends="compile"
+          description="Compiles the test code">
+
+      <javac srcdir="${test.dir}"
+               destdir="${build.dir}"
+               debug="true"
+               optimize="${optimize}"
+               compiler="modern"
+               source="1.5"
+               target="1.5"
+               includeantruntime="false">
+      <classpath refid="test.class.path"/>
+
+    </javac>
+
+
+  </target>
+
+
+
+    <target name="jar" depends="compile" description="Creates main Jar file">
+
+        <jar destfile="${main.jar}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+   
+    
+
+    <target name="jartests" depends="compiletests"
+            description="Creates main Jar file including test classes">
+
+        <jar destfile="${main.jar}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+
+
+    <target name="run" depends="jar"
+            description="Runs the main code">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <java classname="${main.class}" fork="true">
+            <jvmarg value="-Xmx100M" />
+            <classpath refid="run.class.path"/>
+            <arg value="http://neuromorpho.org/neuroMorpho/dableFiles/borst/CNG%20version/dCH-cobalt.CNG.swc"/>
+        </java>
+    </target>
+    
+
+    <target name="test" depends="clean, jar"
+            description="Tests the main code">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <java classname="${main.class}" fork="true">
+            <jvmarg value="-Xmx100M" />
+            <classpath refid="test.class.path"/>
+            <arg value="http://neuromorpho.org/neuroMorpho/dableFiles/borst/CNG%20version/dCH-cobalt.CNG.swc"/>
+            <arg value="-test"/>
+        </java>
+    </target>
+
+    <target name="testnml" depends="clean, jar"
+            description="Tests the main code">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <java classname="${main.class}" fork="true">
+            <jvmarg value="-Xmx100M" />
+            <classpath refid="test.class.path"/>
+            <!--
+            <arg value="examples/dCH-cobalt.CNG.swc"/>
+            <arg value="examples/l22_sphersoma.swc"/>
+            <arg value="examples/l22_cylsoma.swc"/>
+            <arg value="examples/l22.swc"/>
+            <arg value="examples/l22_small.swc"/>
+            -->
+            <arg value="-test"/>
+        </java>
+    </target>
+
+
+    <target name="testone" depends="clean, jar"
+            description="Tests the main code">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <java classname="${main.class}" fork="true">
+            <jvmarg value="-Xmx100M" />
+            <classpath refid="test.class.path"/>
+            <!--<arg value="spherSomaSwc/A9-May23-IR1-6-K.CNG.swc"/>
+            <arg value="twoCylSwc/A2-June2-IR1-1-A.CNG.swc.swc"/>-->
+            <arg value="caseExamples/Case1_new.swc"/>
+            <arg value="-testone"/>
+        </java>
+    </target>
+
+
+
+
+
+    <target name="clean" description="Removes the built files" depends="init">
+
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <delete>
+                <fileset dir="." includes="*.jar"/>
+        </delete>
+
+    </target>
+
+
+    <target name="cleantest" description="Removes the files" depends="clean">
+
+        <delete>
+                <fileset dir="temp" includes="*.*"/>
+        </delete>
+
+    </target>
+
+     
+	
+</project>

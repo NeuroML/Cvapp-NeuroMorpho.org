@@ -23,9 +23,10 @@ package cvapp;
 */
 import java.awt.event.*;
 import java.awt.*;
+import javax.swing.JLabel;
 
 
-class popLabel extends Label implements MouseListener {
+class popLabel extends JLabel implements MouseListener {
    PopupMenu mymenu;
    
    popLabel (String s, PopupMenu pum) {

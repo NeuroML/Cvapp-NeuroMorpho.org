@@ -1,0 +1,222 @@
+
+The changes in version 1.8.1 over version 1.8.0 (June 2009): 
+
+General
+- Updated command line utility (at http://neuroml.svn.sourceforge.net/viewvc/neuroml/CommandLineUtils/) to use latest XSLs
+
+MorphML:
+- Changes to favour American English millimeter, etc. Made micrometer the preferred format for length_units rather than micron
+
+ChannelML
+- Updates to PSICS mapping to handle generic expressions for rates and parameters
+- Some pre 1.7.3 format ChannelML elements names changed as they are deprecated, e.g. Deprecated_Ion
+- Added element for STDP synapse, stdp_syn & mapping to NEURON
+- Improved GENESIS gap junction behaviour, now works with hsolv- 
+
+NetworkML
+- Minor update to allow site specific values for electrical input properties, e.g. different pulse input/spiking rate levels for 
+  cells in a set of inputs
+
+
+------------------------------------------------------------------------------------------
+
+The changes in version 1.8.0 over version 1.7.3 (Jan 2009): 
+
+General 
+- Updated all examples to use new form of ChannelML
+
+Metadata:
+- Added "deprecated" as possible value in status element
+- Allowed multiple NeuronDB, ModelDB, NeuroMorpho entries
+- Changed preferred form of lengthUnits to length_units
+
+Biophysics:
+- Changed group subelement of parameter to have minOccurs="1"
+- Changed preferred form of variableParameter to variable_parameter
+
+ChannelML
+- Added initial PSICS mapping for channels. Only quite basic HH channels supported at the moment. Warnings
+  will be given in mapped file about features in the CML file which are not yet supported
+- Added conc_factor element in new ChannelML layout
+- Changed preferred form of lengthUnits to length_units
+- Updated NEURON & GENESIS mappings for gap junctions
+- Changed preferred form of variableParameter to variable_parameter
+- Added more deprecated element warnings in channelml
+
+NetworkML/Level 3:
+- Allowed zero potential_syn_loc subelements on connectivity element in Level 3 cell
+
+
+------------------------------------------------------------------------------------------
+
+The changes in version 1.7.3 over version 1.7.2 (Nov 2008): 
+
+General
+- Updated Validator application to comply with new www.neuroml.org scheme, updated JSPs accordingly.
+
+Metadata:
+- Added possibility to reference NeuroMorpho entry
+
+MorphML
+- Cell element's order of children changed to segments, cables, cellBody, spines, freePoints
+- Segments element made required, only one instance allowed
+
+
+ChannelML:
+- Added new expamples of a proposed change to ChannelML format based on Robert Cannon's suggestions. The gate
+  element has been restructured to list states in the gating complex, and the transitions between them. The
+  HTML mappings, and the NEURON/GENESIS XSD fiels have been updated to handle the new format (beta stage of testing!!)
+
+NetworkML:
+- Made size a required attribute in instances, added optional size attribute to connections
+- Set preferred attribute of target to be population instead of cell_group
+
+
+
+------------------------------------------------------------------------------------------
+
+The changes in version 1.7.2 over version 1.7.1 (July 2008): 
+
+General:
+- Updated v2.0 requirements page with easier to read status column
+- Replaced MossyCell Level 1 example with Layer 2/3 Pyramidal cell morphology, as exported from NEURON in NeuroML 
+  format and converted to a 3D representation using the segment rotation features in neuroConstruct. Good example for
+  X3D view.
+- Updated NEURON NeuroML export files at http://neuroml.svn.sourceforge.net/viewvc/neuroml/nrn2NeuroML to use latest
+  names for spec_capacitance, passive_conductance, fract_along_parent, etc. and updated Pyramidal cell example
+
+ 
+ChannelML:
+- Updated preferred attributes of transition for KSGate (source & target, not src & target)
+- Set the preferred form of generic expression in a voltage gate to be <generic expr="XXX"> 
+  as opposed to using an element called generic_equation_hh
+
+
+
+
+------------------------------------------------------------------------------------------
+
+
+The changes in version 1.7.1 over version 1.7 (April 2008): 
+
+General: 
+- Reorganised Examples folder/Samples.jsp to separate out synaptic mechanism examples 
+  and added a number of new examples
+- Added a number of the v2.0 changes as optional. Updated all examples (apart from
+  OldNetworkInstance.xml) to conform to new scheme. See ReqVersion2.jsp for details.
+
+Metadata:
+- Added Point3D for Point without option of diameter (e.g. 3D location)
+
+MorphML:  
+- fractAlongParent changed to fract_along_parent for naming consistency. Old form allowed until v2.0
+
+Biophysics:
+- Added TimeConstantValueIncZero type to allow zero rise time for synapses
+- Changed specificAxialResistance to spec_axial_resistance, etc. (PROVISIONAL!) in line 
+  with changes in ReqVersion2.jsp
+
+ChannelML:
+- Changed preferred structure of CaPool. See ReqVersion2.jsp for details.
+- Made rate expressions inside VoltageGate more flexible (gamma or zeta can be present)
+
+
+NetworkML:
+- Made changes as noted in ReqVersion2.jsp. Updated Examples (and neuroConstruct export) 
+  to prefer new format. The current specifications, the HTML mappings and X3D mapping
+  allow both options. 
+- Changed projections to require at least one projection sub element
+- Changed potentialSynapticLocation to potential_syn_loc
+
+
+
+
+------------------------------------------------------------------------------------------
+
+The changes in version 1.7 over version 1.6 (Dec 2007): 
+
+Note: these changes go hand in hand with updates of the NEURON mappings to NeuroML at:
+http://neuroml.svn.sourceforge.net/viewvc/neuroml/
+
+
+General: 
+- Added a link to a Version 2.0 Requirements page, where ideas for updates/refinements can be added. Any suggestions for
+  additions are welcome via the mailing list: neuroml-technology@lists.sourceforge.net
+
+- Updated HTML view of cell morphology to detail cables/num of segs in them/cable groups
+
+- Minor updates to layout of HTML view of XSD files
+
+
+Metadata:
+- Added type Percentage (0-100 inclusive)
+
+
+MorphML:  
+- Added initial impl of X3D view of MorphML files, only lines for neurites so far. See X3D Support link...
+
+- Added example of morphology (NeuroML Level 2) exported from NEURON (PyramidalCell.xml)
+
+
+Biophysics:
+- Added optional parameter passiveConductance to bio:mechanism element, meaning that when params gmax and e are included, 
+  this mechanism is fully specified independent of a specific mechanism implementation.
+
+
+ChannelML:
+- Added ion role PermeatedSubstanceFixedRevPot for, e.g. ca chans with fixed ca rev pot (there are models out there 
+  with this)
+
+- Added optional ceiling param to Ca/DecayingPoolModel, to specify a max value the ion concentration can reach. 
+  Impls for NEURON & GENESIS updated
+
+- Added support for CaPool with fixed value for dependence on calcium current into compartment (in DecayingPoolModel). 
+  Needed for Traub et al 2003
+
+
+NetworkML:
+- Added optional size attribute to instances element in NetworkML. This is redundant information, 
+  but can be useful when the file is being parsed to allocate memory for an array of cells. NOTE: 
+  will very likely become REQUIRED in v2.0
+
+- Added initial impl of X3D views of NetworkML files. Note: only "pure" NetworkML file supported, 
+  so single compartments for cell instances, segment_id ignored! See X3D Support link...
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------
+
+
+
+The changes in version 1.6 over version 1.5: 
+
+General: 
+- Added <status> element in Metadata (used in channel_type, synapse_type, ion_concentration currently) which can be used to indicate 
+  stable/in_progress/known_issues status of files. Can be used to automatically detect unstable parts of complex models.
+- Comment can be included with author info.
+- Updated index.jsp to highlight 3 examples at each level as particularly useful to learn the structure of the specifications (suggestions for enhancements welcome).
+- Enabled links from elements in (formatted) XML view of examples to HTML representation of XSDs (e.g. link from <meta:notes> to Metadata.xsd)
+- Added Nicolas's XSDtoRNG.xsl to transform XSD files into Relax NG format
+
+
+MorphML:  
+- Minor changes made to position of some <text>...</text> tags in NEURON/GENESIS mapping
+
+
+Biophysics: 
+- Removed ReversalPotentialValue, added ConductanceDensityValue
+- Moved Units element to Metadata
+
+
+ChannelML:
+- Allowed extra rate params (gamma, zeta) in case tau/inf need to be expressed in parameterised forms other than alpha and beta (see Kdr.xml)
+- Included fixed_q10 option, when a Q10 adjustment should be included but is specified for only one temperature
+
+
+NetworkML:
+- num_per_source made required and max_per_target made optional in PerCellConnection, and restrictions on values updated.
+- Added non_spatial_grid option to GridArrangement, to specify a grid in a network simulation where 3D location is unimportant

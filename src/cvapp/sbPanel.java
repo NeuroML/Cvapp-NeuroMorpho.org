@@ -23,29 +23,24 @@ package cvapp;
 */
 
 
-
-
-
 import java.awt.*;
+import javax.swing.JPanel;
 
+public class sbPanel extends JPanel {
 
-public class sbPanel extends Panel {
+    sbPanel() {
+        super();
+    }
 
+    @Override
+    public Insets getInsets() {
+        return (new Insets(3, 3, 3, 3));
+    }
 
-  sbPanel() {
-     super();
-  }
-
-
-
-  public Insets getInsets() {
-    return (new Insets (3,3,3,3));
-  }
-
-
-   public void paint (Graphics g) {
-      Dimension d = getSize();
-      Color c = getBackground();
-      WindowDressing.SunkenBorder (g, d, c); 
-   }
+    @Override
+    public void paint(Graphics g) {
+        Dimension d = getSize();
+        Color c = getBackground();
+        WindowDressing.SunkenBorder(g, d, c);
+    }
 }

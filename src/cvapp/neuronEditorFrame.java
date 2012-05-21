@@ -23,56 +23,71 @@ package cvapp;
 */
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
-class neuronEditorFrame extends Frame implements WindowListener  {
-   neuronEditorPanel  neupan;
-   
-  neuronEditorFrame (int w, int h) {   
-     //super ("cvapp 1.2  98-09-22");
+class neuronEditorFrame extends JFrame implements WindowListener {
 
-     Font f = getFont();
-     setFont (f);
+    neuronEditorPanel neupan;
 
-     neupan = new  neuronEditorPanel (w, h, f); 
-     setLayout (new BorderLayout());
-     add ("Center", neupan);
-     setSize (w, h);
-     neupan.setParentFrame (this);
-     setReadWrite (true, true);
-     addWindowListener (this);
-     
-  }
+    neuronEditorFrame(int w, int h) {
+        //super ("cvapp 1.2  98-09-22");
+        
 
-	
-	
-   public void setReadWrite (boolean a, boolean b) {
-      neupan.setReadWrite (a, b);
-   }
+        Font f = getFont();
+        Container content = this.getContentPane();
 
-  public void refresh () {
-     neupan.refresh ();
-  }
+        content.setFont(f);
 
+        neupan = new neuronEditorPanel(w, h, f);
+        content.setLayout(new BorderLayout());
+        content.add("Center", neupan);
+        this.setSize(w, h);
+        neupan.setParentFrame(this);
+        setReadWrite(true, true);
+        addWindowListener(this);
+    }
 
-  public void loadFile(String s[], String fdir, String frfile)
-  {
-      neupan.setCell(s, fdir, frfile);
-  }
-  
-   public void windowActivated(WindowEvent e) {}
-   public void windowClosed(WindowEvent e) {}
-   public void windowClosing(WindowEvent e) {
-      setVisible( false);
-   } 
-   public void windowDeactivated(WindowEvent e)  {}
-   public void windowDeiconified(WindowEvent e)  {} 
-   public void windowIconified(WindowEvent e)  {}
-   public void windowOpened(WindowEvent e)  {}
+    public neuronEditorPanel getNeuronEditorPanel() {
+        return neupan;
+    }
+    
+    
 
+    public final void setReadWrite(boolean a, boolean b) {
+        neupan.setReadWrite(a, b);
+    }
 
+    public void refresh() {
+        neupan.refresh();
+    }
+
+    public void loadFile(String s[], String fdir, String frfile) {
+        neupan.setCell(s, fdir, frfile);
+    }
+
+    public void windowActivated(WindowEvent e) {
+    }
+
+    public void windowClosed(WindowEvent e) {
+        System.out.println("windowClosed");
+    }
+
+    public void windowClosing(WindowEvent e) {
+        System.out.println("windowClosing");
+        System.exit(0); // Since it will be used standalone if neuronEditorFrame is used
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    public void windowIconified(WindowEvent e) {
+    }
+
+    public void windowOpened(WindowEvent e) {
+    }
 }
-  
-
-
 
 

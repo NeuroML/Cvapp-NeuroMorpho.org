@@ -25,11 +25,7 @@ package cvapp;
 
 
 
-import java.util.*;
-import java.lang.*;
 import java.awt.*;
-import java.applet.*;
-import java.net.*;
 
 
 class graphData3 extends Object {

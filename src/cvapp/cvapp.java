@@ -24,64 +24,61 @@ package cvapp;
 import java.awt.*;
 import java.awt.event.*;
 import java.applet.*;
-
+import javax.swing.JFrame;
 
 public class cvapp extends Applet implements ActionListener {
 
+    public cvapp() {
+        super();
+    }
 
-   public cvapp () {
-      super();
-   }
+    @Override
+    public void init() {
 
-   public void init () {
+        int w;
+        int h;
 
-      int w;
-      int h;
-      
-      //      w = (new Integer(getParameter ("width"))).intValue();
-      //      h = (new Integer(getParameter ("height"))).intValue();
+        //      w = (new Integer(getParameter ("width"))).intValue();
+        //      h = (new Integer(getParameter ("height"))).intValue();
 
-      w = 500;
-      h = 600;
+        w = 500;
+        h = 600;
 
-      setLayout (new BorderLayout());
-      Font f = new Font ("8x13", Font.PLAIN, 13);
+        setLayout(new BorderLayout());
+        Font f = new Font("8x13", Font.PLAIN, 13);
 
-      neuronEditorPanel neupan = new  neuronEditorPanel (w, h, f); 
+        neuronEditorPanel neupan = new neuronEditorPanel(w, h, f);
 
-      neupan.setParentFrame (new Frame());
+        neupan.setParentFrame(new JFrame());
 
-      add ("Center", neupan);
-      
-      Button bfloat = new Button ("f l o a t");
+        add("Center", neupan);
 
-      add ("North", bfloat);
-      bfloat.addActionListener (this);
-      neupan.setReadWrite (true, true);
-      setSize (w, h);
-      
-   } 
+        Button bfloat = new Button("f l o a t");
 
-   public void actionPerformed(ActionEvent e) {
-      Object source = e.getSource();
-      if (source instanceof Button) {
-         String sarg = ((Button)source).getLabel();
-	 
-	 if (sarg.equals("f l o a t")) {
-	    Dimension d = getSize();
-	    int w = d.width;
-	    int h = d.height;
-	    neuronEditorFrame nef = 
-                     new neuronEditorFrame (w, h);
-	    nef.setReadWrite (true, true);
-	    nef.validate();
-	    nef.setVisible(true);
-	 }
-      }
-   }
+        add("North", bfloat);
+        bfloat.addActionListener(this);
+        neupan.setReadWrite(true, true);
+        setSize(w, h);
 
-   
+    }
 
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source instanceof Button) {
+            String sarg = ((Button) source).getLabel();
+
+            if (sarg.equals("f l o a t")) {
+                Dimension d = getSize();
+                int w = d.width;
+                int h = d.height;
+                neuronEditorFrame nef =
+                    new neuronEditorFrame(w, h);
+                nef.setReadWrite(true, true);
+                nef.validate();
+                nef.setVisible(true);
+            }
+        }
+    }
 
 //  public static void main (String argv[]) {
 //    Font boldFont = new Font ("8x13", Font.PLAIN, 13);
@@ -95,6 +92,7 @@ public class cvapp extends Applet implements ActionListener {
 //    nef.validate();
 //    nef.setVisible(true);
 //  }
+    
 }
 
 

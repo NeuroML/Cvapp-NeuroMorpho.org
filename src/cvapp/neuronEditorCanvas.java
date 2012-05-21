@@ -24,8 +24,6 @@ package cvapp;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.util.*;
 
 class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
    neulucData cell;

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://morphml.org/morphml/schema"
+xmlns="http://morphml.org/morphml/schema"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:meta="http://morphml.org/metadata/schema"
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+   
+<!--
+
+    This file specifies the main NeuroML Level 1 elements
+    
+    Authors: Sharon Crook, Joe Svitak, Padraig Gleeson and members of the NeuroML initiative
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+-->
+    <xs:import namespace="http://morphml.org/metadata/schema"
+        schemaLocation="../Level1/Metadata_v1.8.1.xsd"/>
+
+    <!-- Definition of Morphology follows. -->
+    <xs:complexType name="Morphology">
+        <xs:annotation>
+            <xs:documentation>The main element which details the neuronal morphology. Cells, various histological features, and
+            properties associated with the data can be contained in this element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+            
+            <xs:element name="cells" type="Cells"/>
+            
+            <xs:element name="features" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Collection of all extracellular histological features.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="meta:metadata"/>
+                        <xs:element name="feature" type="Feature" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>A single feature of note.</xs:documentation>
+                            </xs:annotation>
+                            <xs:key name="keyPath">
+                                <xs:selector xpath=".//path"/>
+                                <xs:field xpath="@id"/>
+                            </xs:key>
+                            <xs:keyref name="pathParentRef" refer="keyPath">
+                                <xs:selector xpath=".//path"/>
+                                <xs:field xpath="@parent"/>
+                            </xs:keyref>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="propertyDetails" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Collection of all PropertyDetails for this instance.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="propertyDetail" type="meta:PropertyDetail" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:key name="keyProperty">
+                    <xs:selector xpath=".//propertyDetail"/>
+                    <xs:field xpath="@property"/>
+                </xs:key>
+            </xs:element>
+            
+            <xs:element name="groupDetails" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Collection of all GroupDetails for this instance.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="groupDetail" type="meta:GroupDetail" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:key name="keyGroup">
+                    <xs:selector xpath=".//groupDetail"/>
+                    <xs:field xpath="@group"/>
+                </xs:key>
+            </xs:element>
+        </xs:sequence>
+        
+        <xs:attribute name="name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>An optional name which can be given to the morphology</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="lengthUnits" type="meta:LengthUnits" use="optional">
+            <xs:annotation>
+                <xs:documentation>Unit of all length measurements. Usually has the value &lt;b&gt;micrometer&lt;/b&gt;. Note: length_units will be the preferred form in v2.0</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="length_units" type="meta:LengthUnits" use="optional">
+            <xs:annotation>
+                <xs:documentation>Unit of all length measurements. Usually has the value &lt;b&gt;micrometer&lt;/b&gt;. Note: length_units will be the preferred form in v2.0</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="volumeUnits" type="meta:VolumeUnits" use="optional" default="cubic_millimeter"> <!-- Note: changed to the American English spelling in v1.8.1...-->
+            <xs:annotation>
+                <xs:documentation>Unit of all volume measurements.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    
+    <!-- Definition of Cells follows. -->
+    <xs:complexType name="Cells">
+        <xs:annotation>
+            <xs:documentation>Collection of all cells.</xs:documentation>
+        </xs:annotation>
+            <xs:sequence>
+                <xs:element name="cell" type="Cell" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>A single cell.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+    </xs:complexType>
+    
+    
+    <!-- Definition of Cell follows. -->
+    <xs:complexType name="Cell">
+        <xs:annotation>
+            <xs:documentation>Definition of a cell.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+
+            <xs:element name="status" type="meta:Status" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Status of the cell model: stable, in progress, etc.
+                    Further test comments explaining the current status should be added.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:group ref="meta:metadata"/>
+
+            <xs:group ref="meta:referencedata"/> 
+                             
+            
+            <xs:element name="segments" minOccurs="1" maxOccurs="1">
+                
+                <xs:annotation>
+                    <xs:documentation>A segment defines the smallest unit within a possibly branching structure, such as a dendrite or axon. The first segment should represent the soma, if needed for downstream applications.</xs:documentation>
+                </xs:annotation>
+                
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="meta:metadata"/>
+                        <xs:element name="segment" type="Segment" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <!-- <xs:attribute name="name" type="xs:string" use="optional"/> -->
+                </xs:complexType>
+                
+                
+                
+                <!-- This needs further testing!! -->
+                
+                <xs:unique name="uniqSegId">
+                    <xs:selector xpath=".//segment"/>
+                    <xs:field xpath="@id"/>
+                </xs:unique>
+                
+                <xs:key name="keySegment">
+                    <xs:selector xpath=".//segment"/>
+                    <xs:field xpath="@id"/>
+                </xs:key>
+                <xs:keyref name="segmentParentRef" refer="keySegment">
+                    <xs:selector xpath=".//segment"/>
+                    <xs:field xpath="@parent"/>
+                </xs:keyref>
+                
+                
+            </xs:element>
+            
+                        <xs:element name="cables" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The collection of cables. Each cable will be associated with a number of connected segments.</xs:documentation>
+                </xs:annotation>
+                
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="meta:metadata"/>
+                        <xs:element name="cable" type="Cable" maxOccurs="unbounded"/>
+                        <xs:element name="cablegroup" type="CableGroup" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+           
+                </xs:complexType>
+                
+                <!-- This needs further testing!! -->
+                
+                <xs:unique name="keyCableGroup">
+                    <xs:selector xpath="./cablegroup"/>
+                    <xs:field xpath="@name"/>
+                </xs:unique>
+                
+                <xs:unique name="keyCable">
+                    <xs:selector xpath="./cable"/>
+                    <xs:field xpath="@id"/>
+                </xs:unique>
+                
+                
+                <!--
+                <xs:keyref name="cableParentRef" refer="keyCable">
+                    <xs:selector xpath=".//cable"/>
+                    <xs:field xpath="@parent"/>
+                </xs:keyref>-->
+            </xs:element>
+            
+                        
+            <xs:element name="cellBody" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Used for anatomical representation of the soma. Use a Segment with equivalent properties to retain connectivity of branches to the soma for downstream applications (e.g. neuronal simulators).</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="meta:metadata"/>
+                        <xs:choice>
+                            <xs:element name="polygon" type="meta:Polygon"/>
+                            <xs:element name="polyhedron" type="meta:Polyhedron"/>
+                            <xs:element name="sphere" type="meta:Sphere"/>
+                        </xs:choice>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            
+            <xs:element name="spines" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The collection of spines.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="meta:metadata"/>
+                        <xs:element name="spine" type="Spine" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+                
+                <xs:keyref name="spineParentRef" refer="keySegment">
+                    <xs:selector xpath=".//spine"/>
+                    <xs:field xpath="@parent"/>
+                </xs:keyref>
+                
+            </xs:element>
+            
+            
+            <xs:element name="freePoints" type="FreePoints" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The collection of varicosities or synaptic connections.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+        </xs:sequence>
+        
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+    </xs:complexType>
+    
+    
+
+    
+    
+    <!-- Definition of Segment follows. -->
+    <xs:complexType name="Segment">
+        <xs:annotation>
+            <xs:documentation>Defines the smallest unit within a possibly branching structure, such as a segment of a dendrite or axon. The parent attribute is used to define connectivity. A segment would be mapped to a compartment in a compartmental modelling application such as GENESIS</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="proximal" type="meta:Point" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The start point (and diameter) of the segment. If absent, it is assumed that the distal point of the parent is the start point of this segment.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="distal" type="meta:Point">
+                <xs:annotation>
+                    <xs:documentation>The end point (and diameter) of the segment. Note if the 3D location of the distal point is the same as the proximal point, the segment is assumed to be spherical.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="properties" type="meta:Properties" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Some optional properties associated with the segment.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        
+        <xs:attribute name="id" type="meta:SegmentIdInCell" use="required">
+            <xs:annotation>
+                <xs:documentation>The ID of the segment, which should be unique within the cell.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>As many simulators use a string to identify the compartments, etc. a unique name can be given to the segment.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="parent" type="meta:SegmentIdInCell" use="optional">
+            <xs:annotation>
+                <xs:documentation>Used to indicate logical connectivity between segments. Note that there is no requirement that the end point of this parent segment is equal to the start point of this segment.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="cable" type="xs:nonNegativeInteger" use="optional">
+            <xs:annotation>
+                <xs:documentation>The cable ID of which this segment is part. Numerous segments will make up one cable, and it is assumed these are connected electrically.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+           
+    
+    <!-- Definition of Cable follows. -->
+    <xs:complexType name="Cable">
+        <xs:annotation>
+            <xs:documentation>Definition of a cable. A cable is a non-branching group of connected segments. A cable would be mapped to a section in a cable modelling based simulator such as NEURON</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+            <xs:annotation>
+                <xs:documentation>ID of the cable, unique within this cell</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>As many simulators use a string to identify the sections, etc. a unique name can be given to the segment.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="parent" type="xs:nonNegativeInteger" use="optional">
+            <xs:annotation>
+                <xs:documentation>A cable ID. A way to connect cables logically.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="fractAlongParent" type="meta:ZeroToOne" use="optional">
+            <xs:annotation>
+                <xs:documentation>Approximate location of this section's proximal point along the parent cable. NOTE: this attribute will be removed in v2.0!! Use fract_along_parent instead.
+            Changed for consistency with ChannelML and NetworkML naming conventions.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="fract_along_parent" type="meta:ZeroToOne" use="optional">
+            <xs:annotation>
+                <xs:documentation>Connection location of this section's proximal point along the parent cable. 
+                Normally this could be determined by the 3D points, but this option is needed as many reconstructed neurons have dendrites "floating in space", possibly due to drift
+                of the slice. In this case the fract_along_parent determines electrical connectivity, and it is up to the loading application/its user to decide to ignore the discrepancy, 
+                move the dendrite or fill in an extra section.
+                NOTE: this attribute will be required in v2.0!! Don't use fractAlongParent anymore.
+            Changed for consistency with ChannelML and NetworkML naming conventions.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <!-- Definition of Sphere follows. -->
+    
+
+        <!-- Definition of CableGroup follows. -->
+    <xs:complexType name="CableGroup">
+        <xs:annotation>
+            <xs:documentation>Definition of a cable group. Cable groups can also be specified by adding an element group to the cable element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="cable" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>The id of a single cable in the group</xs:documentation>
+                </xs:annotation>
+                
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+                </xs:complexType>
+             
+            </xs:element>
+            
+            <xs:element name="inhomogeneous_param" type="InhomogeneousParam" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Name of the cable group</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <!-- Definition of Metric follows. -->
+    <xs:simpleType name="Metric">
+        <xs:annotation>
+            <xs:documentation>Metric for use in InhomogeneousParam</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Path Length from root"/>
+            <xs:enumeration value="3D radial position"/>
+            <xs:enumeration value="3D path length from line"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+        <!-- Definition of InhomogeneousParam follows. -->
+    <xs:complexType name="InhomogeneousParam">
+        <xs:annotation>
+            <xs:documentation>Definition of a parameter which varies along a cable group.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="metric" type="Metric">
+                <xs:annotation>
+                    <xs:documentation>The metric used to determine the variable</xs:documentation>
+                </xs:annotation>
+             
+            </xs:element>
+            <xs:element name="proximal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Information on the value of the variable at the proximal point. If this element is absent,
+                    the value of the variable is determined simply from the metric, e.g. absolute path length</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="translationStart" type="xs:double" use="required">
+                        <xs:annotation>
+                            <xs:documentation>The variable is translated to this value at the proximal point</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="distal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Information on the value of the variable at the distal point. If this element is absent, the
+                    value of the variable is determined simply from the metric, e.g. path length</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="normalizationEnd" type="xs:double" use="required">
+                        <xs:annotation>
+                            <xs:documentation>The variable is normalised so that it has this value at the distal point</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Name of the inhomogeneous parameter specification</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="variable" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Name of the variable which will change over the length</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Definition of SpineShape follows. -->
+    <xs:simpleType name="SpineShape">
+        <xs:annotation>
+            <xs:documentation>Enumeration of allowed spine shapes.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mushroom"/>
+            <xs:enumeration value="stubby"/>
+            <xs:enumeration value="thin"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+    <!-- Definition of Spine follows. -->
+    <xs:complexType name="Spine">
+        <xs:annotation>
+            <xs:documentation>A spine with location, shape, and direction.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="proximal" type="meta:Point"/>
+            <xs:element name="distal" type="meta:Point" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="parent" type="meta:SegmentIdInCell" use="optional">
+            <xs:annotation>
+                <xs:documentation>The segment with which this spine is associated.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="length" type="xs:double" use="optional"/>
+        <xs:attribute name="volume" type="xs:double" use="optional"/>
+        <xs:attribute name="shape" type="SpineShape" use="optional"/>
+    </xs:complexType>
+    
+    
+    <!-- Definition of FreePoints follows. -->
+    <xs:complexType name="FreePoints">
+        <xs:annotation>
+            <xs:documentation>A set of varicosities or synaptic connections.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="meta:Points"/>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    
+    <!-- Definition of Path follows. -->
+    <xs:complexType name="Path">
+        <xs:annotation>
+            <xs:documentation>Possibly branching histological structures.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="meta:Points">
+                <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+                <xs:attribute name="parent" type="xs:nonNegativeInteger" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>A path id. A way to connect this path to another.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    
+    <!-- Definition of Feature follows. -->
+    <xs:complexType name="Feature">
+        <xs:annotation>
+            <xs:documentation>The group of things allowed in features.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+            <xs:element name="path" type="Path" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="freePoints" type="FreePoints" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="manifold" type="meta:Manifold" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="polygon" type="meta:Polygon" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="polyhedron" type="meta:Polyhedron" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="sphere" type="meta:Sphere" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+    </xs:complexType>
+    
+
+    
+
+    <!-- The root element. -->
+    <xs:element name="morphml" type="Morphology">
+        <xs:annotation>
+            <xs:documentation>The root element, and so will start any MorphML (NeuroML Level 1) compliant document.</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>

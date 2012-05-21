@@ -22,13 +22,11 @@ package cvapp;
 
 */
 
-import java.util.*;
-import java.lang.*;
 import java.awt.*;
 import java.awt.event.*;
 
 
-public class graphCanvas3 extends Canvas  implements MouseListener,
+public class graphCanvas3 extends Canvas implements MouseListener,
                                                    MouseMotionListener,
                                                    KeyListener {
 

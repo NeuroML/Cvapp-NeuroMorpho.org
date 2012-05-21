@@ -26,12 +26,12 @@ package cvapp;
 import java.awt.*;
 import java.awt.List;
 import java.net.*;
-import java.util.*;
-import java.io.*;
 import java.awt.event.*;
+import java.io.File;
+import javax.swing.*;
 
-class neuronEditorPanel extends rsbPanel implements ActionListener,
-		ItemListener {
+class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
+    
 	graphData3 neugd;
 	neuronEditorCanvas neucan;
 	rescalableFloatSlider rsfsxscale;
@@ -58,10 +58,25 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 	Checkbox cb1, cb2;
 	shrinkageCorrectionFrame shrinkageCorrectionF;
 	headerFrame headerF;
-	Panel pneucan; // neucan container - for switching with header;
+	JPanel pneucan; // neucan container - for switching with header;
 	int markType = 0;
-	messageDialog messageD;
-	Frame topF;
+    
+	JDialog messageD;
+	//JPanel messageP;
+    
+	JFrame topF;
+    
+    protected final static String SKEL_PROJ = "Skeleton Proj.";
+    protected final static String AREA_PROJ = "Area Proj.";
+    
+    protected final static String SAVE_OPTION = "Please select...";
+    protected final static String SAVE_NEURON = "NEURON";
+    protected final static String SAVE_GENESIS = "GENESIS";
+    protected final static String SAVE_NEUROML_v1 = "NeuroML v1.8.1";
+    protected final static String SAVE_NEUROML_v2alpha = "NeuroML v2alpha";
+    protected final static String CENTER = "Center";
+            
+
 
 	neuronEditorPanel(int w, int h, Font f) {
 
@@ -99,22 +114,22 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 		rsfszcursor.setWatcher((graphCanvas3) neucan);
 
-		Panel toppan = new Panel();
+		JPanel toppan = new JPanel();
 		toppan.setLayout(new GridLayout(1, 9, 1, 1));
-		toppan.add(new Button("trace"));
-		toppan.add(new Button("find"));
-		toppan.add(new Button("clear"));
-		toppan.add(new Button("join"));
-		toppan.add(new Button("ident."));
-		toppan.add(new Button("merge"));
-		toppan.add(new Button("nodes"));
-		toppan.add(new Button("outlines"));
-		toppan.add(new Button("clean"));
+		toppan.add(new JButton("trace"));
+		toppan.add(new JButton("find"));
+		toppan.add(new JButton("clear"));
+		toppan.add(new JButton("join"));
+		toppan.add(new JButton("ident."));
+		toppan.add(new JButton("merge"));
+		toppan.add(new JButton("nodes"));
+		toppan.add(new JButton("outlines"));
+		toppan.add(new JButton("clean"));
 
 		markLabel = new popLabel("as: unknown", typeMenu);
 		markTF = new TextField("-1");
 
-		Panel butpan = new Panel();
+		JPanel butpan = new JPanel();
 		butpan.setLayout(new GridLayout(4, 1, 1, 2));
 		sbPanel butpan0 = new sbPanel();
 		sbPanel butpan1 = new sbPanel();
@@ -126,22 +141,22 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan0.add(cb1 = new Checkbox("normal", true, cbg));
 		butpan0.add(cb2 = new Checkbox("grow", false, cbg));
 
-		butpan0.add(new Button("add floating"));
+		butpan0.add(new JButton("add floating"));
 
 		butpan1.setLayout(new GridLayout(4, 1, 1, 1));
-		butpan1.add(new Button("cut"));
-		butpan1.add(new Button("add between"));
-		butpan1.add(new Button("remove"));
-		butpan1.add(new Button("loops"));
+		butpan1.add(new JButton("cut"));
+		butpan1.add(new JButton("add between"));
+		butpan1.add(new JButton("remove"));
+		butpan1.add(new JButton("loops"));
 
 		butpan2.setLayout(new GridLayout(4, 1, 1, 1));
-		butpan2.add(new Label("select:"));
-		butpan2.add(new Button("section"));
-		butpan2.add(new Button("tree"));
-		butpan2.add(new Button("points"));
+		butpan2.add(new JLabel("select:"));
+		butpan2.add(new JButton("section"));
+		butpan2.add(new JButton("tree"));
+		butpan2.add(new JButton("points"));
 
-		butpan3.add(new Button("delete"));
-		butpan3.add(new Button("mark"));
+		butpan3.add(new JButton("delete"));
+		butpan3.add(new JButton("mark"));
 		butpan3.setLayout(new GridLayout(4, 1, 1, 1));
 		butpan3.add(markLabel);
 		butpan3.add(markTF);
@@ -169,8 +184,8 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 				sbPanel cs = (sbPanel) c;
 				for (int j = cs.getComponentCount() - 1; j >= 0; j--) {
 					Component d = cs.getComponent(j);
-					if (d instanceof Button) {
-						((Button) d).addActionListener(this);
+					if (d instanceof JButton) {
+						((JButton) d).addActionListener(this);
 					}
 				}
 			}
@@ -178,8 +193,8 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 		for (int i = toppan.getComponentCount() - 1; i >= 0; i--) {
 			Component c = toppan.getComponent(i);
-			if (c instanceof Button) {
-				((Button) c).addActionListener(this);
+			if (c instanceof JButton) {
+				((JButton) c).addActionListener(this);
 			}
 		}
 
@@ -187,20 +202,24 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 		ob = new ModifiedOptionBar(this); // NMO Developer : optionbar modified to accomodate new changes.
 
 		// Following panel is added to provide information to user. owl
-		Panel infoPanel = new Panel();
-		infoPanel.setLayout(new FlowLayout());
-		infoPanel.add(new Label("Left/Right Click: Zoom In/Out"));
-		infoPanel.add(new Label("Left/Right Drag: Move/Rotate"));
+		JPanel infoPanel = new JPanel();
 
-		Panel bars = new Panel();
+		infoPanel.setLayout(new FlowLayout());
+        JLabel jl1 = new JLabel("Left/Right Click: Zoom In/Out");
+		infoPanel.add(jl1);
+        JLabel jl2 = new JLabel("Left/Right Drag: Move/Rotate");
+		infoPanel.add(jl2);
+
+		JPanel bars = new JPanel();
 		bars.setLayout(new GridLayout(2, 1));
 		//  NMO Developer : Functionality not to be included. Hence commented out. 
 		// bars.add (wcb);
 		bars.add(infoPanel);
 		bars.add(ob);
 
-		pneucan = new Panel();
+		pneucan = new JPanel();
 		pneucan.setLayout(new BorderLayout());
+        pneucan.setBorder(BorderFactory.createLoweredBevelBorder());
 
 		//  NMO Developer : Functionality not to be included. Hence commented out.
 		// pneucan.add("North", toppan);
@@ -231,12 +250,21 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 		setCell(sdat, "", "default.swc");
 	}
 
-	public void setParentFrame(Frame fr) {
+	public void setParentFrame(JFrame fr) {
 		if (fr != null) {
 			topF = fr;
-			messageD = new messageDialog(fr);
+			messageD = new JDialog();
+            messageD.setTitle("Please wait...");
+            messageD.getContentPane().add(new JLabel("Doing something 1..."));
+            messageD.getContentPane().add(new JLabel("Doing something 2..."));
 		}
 	}
+
+    public neulucData getCell() {
+        return cell;
+    }
+    
+    
 
 	public void exit() {
 		if (topF != null) {
@@ -289,20 +317,20 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 	}
 
 	public String[] readStringArrayFromURL(URL u) {
-		blockingMessageOn("reading URL", u.toString());
+		blockingMessageOn("Reading URL", u.toString());
 		String[] sa = urlString.readStringArrayFromURL(u);
 		blockingMessageOff();
 		return sa;
 	}
 
 	public void writeStringToFile(String s, String flongwrite) {
-		blockingMessageOn("writing " + flongwrite);
+		blockingMessageOn("Writing " + flongwrite);
 		fileString.writeStringToFile(s, flongwrite);
 		blockingMessageOff();
 	}
 
 	public String[] readStringArrayFromFile(String flongread) {
-		blockingMessageOn("reading " + flongread);
+		blockingMessageOn("Reading " + flongread);
 		String[] sa = fileString.readStringArrayFromFile(flongread);
 		blockingMessageOff();
 		return sa;
@@ -327,8 +355,8 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if (source instanceof Button) {
-			String sarg = ((Button) source).getLabel();
+		if (source instanceof JButton) {
+			String sarg = ((JButton) source).getLabel();
 			processNameEvent(sarg);
 		} else if (source instanceof MenuItem) {
 			String sarg = ((MenuItem) source).getLabel();
@@ -480,7 +508,7 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.equals("save as Genesis - flat")) {
+		} /*else if (sarg.equals("save as Genesis - flat")) {
 			if (canWriteFiles) {
 				String[] sa = fileString.getFileName2("w", fdir);
 				if (sa != null && sa[0] != null) {
@@ -494,14 +522,12 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.startsWith("save as Genesis - hierar")) {
+		}*/ else if (sarg.startsWith("save as Genesis - hierar")) {
 			if (canWriteFiles) {
-				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
-					fdir = sa[0];
-					fwfile = sa[1];
+				File f = fileString.getFileToSave(this, fdir, "Select GENESIS file");
+				if (f != null) {
 					blockingMessageOn("formatting as GENESIS");
-					writeStringToFile(cell.GENESISwriteHR(), fdir + fwfile);
+					writeStringToFile(cell.GENESISwriteHR(), f.getAbsolutePath());
 				}
 
 			} else {
@@ -524,12 +550,23 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 		} else if (sarg.startsWith("save as hoc (Neuron) - name")) {
 			if (canWriteFiles) {
-				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
-					fdir = sa[0];
-					fwfile = sa[1];
+				File f = fileString.getFileToSave(this, fdir, "Select NEURON file");
+				if (f != null) {
 					blockingMessageOn("formatting as HOC (named segments)");
-					writeStringToFile(cell.HOCwriteNS(), fdir + fwfile);
+					writeStringToFile(cell.HOCwriteNS(), f.getAbsolutePath());
+				}
+
+			} else {
+				System.out.println("file writing not allowed ");
+			}
+
+
+		} else if (sarg.startsWith(neuronEditorPanel.SAVE_NEUROML_v1)) {
+			if (canWriteFiles) {
+				File f = fileString.getFileToSave(this, fdir, "Select NeuroML file");
+				if (f != null) {
+					blockingMessageOn("formatting as NeuroML");
+					writeStringToFile(cell.writeNeuroML_v1_8_1(), f.getAbsolutePath());
 				}
 
 			} else {
@@ -553,25 +590,30 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
 	}
 
 	public void blockingMessageOn(String s) {
-		messageD.setLabel1(s);
+        ((JLabel)messageD.getContentPane().getComponent(0)).setText(s);
+        ((JLabel)messageD.getContentPane().getComponent(1)).setText("");
+        messageD.pack();
 		Point p = getLocationOnScreen();
 		messageD.setLocation(p.x + 100, p.y + 20);
-		messageD.showMessage();
+		messageD.setVisible(true);
 	}
 
 	public void blockingMessageOn(String s1, String s2) {
 		if (messageD != null) {
-			messageD.setLabel1(s1);
-			messageD.setLabel2(s2);
+			((JLabel)messageD.getContentPane().getComponent(0)).setText(s1);
+			((JLabel)messageD.getContentPane().getComponent(1)).setText(s2);
+            messageD.pack();
 			Point p = getLocationOnScreen();
 			messageD.setLocation(p.x + 100, p.y + 20);
-			messageD.showMessage();
+            messageD.setVisible(true);
 		}
 	}
 
 	public void blockingMessageOff() {
 		if (messageD != null)
-			messageD.hideMessage();
+			messageD.dispose();
+        else
+            System.out.println("Blocking message dialog is null...");
 	}
 
 }
@@ -580,10 +622,10 @@ class neuronEditorPanel extends rsbPanel implements ActionListener,
  * @author  NMO Developer
  * This class is modified to display only the selected functionality of cvapp.
  * */
-class ModifiedOptionBar extends sbPanel implements ItemListener, ActionListener {
-	Choice cfile;
+class ModifiedOptionBar extends JPanel implements ItemListener, ActionListener {
+	//JChoice cfile;
 	neuronEditorPanel neupan;
-	Label FileNameL;
+	JLabel FileNameL;
 
 	/**
 	 * This constructor initializes all the buttons required on the panel. It
@@ -593,34 +635,61 @@ class ModifiedOptionBar extends sbPanel implements ItemListener, ActionListener 
 		neupan = p;
 
 		setLayout(new FlowLayout());
-		FileNameL = new Label("            null             ");
+		FileNameL = new JLabel("            null             ");
 
 		// Check box button created and listeners are added.
-		CheckboxGroup cbg = new CheckboxGroup();
+		ButtonGroup bg = new ButtonGroup();
 		
-		Checkbox sklProj = new Checkbox("Skeleton Projection", cbg, true); 
+		JRadioButton sklProj = new JRadioButton(neuronEditorPanel.SKEL_PROJ, true); 
+        bg.add(sklProj);
 		sklProj.addItemListener(this);
 
-		Checkbox areaProj = new Checkbox("Area Projection", cbg, false);
+		JRadioButton areaProj = new JRadioButton(neuronEditorPanel.AREA_PROJ, false);
+        bg.add(areaProj);
 		areaProj.addItemListener(this);
+        
+		// button that centers neuron is creates and listener is added.
+		JButton centerJButton = new JButton(neuronEditorPanel.CENTER);
+		centerJButton.addActionListener(this);
 
+        /**
 		// Neuron Save buttons created and Listeners are added
-		Button saveInNeuron = new Button("Save in Neuron");
+		JButton saveInNeuron = new JButton(neuronEditorPanel.SAVE_NEURON);
 		saveInNeuron.addActionListener(this);
 
-		Button saveInGenesis = new Button("Save in Genesis");
+
+		JButton saveInGenesis = new JButton(neuronEditorPanel.SAVE_GENESIS);
 		saveInGenesis.addActionListener(this);
+        
+		// Neuron Save buttons created and Listeners are added
+		JButton saveInNeuroML = new JButton(neuronEditorPanel.SAVE_NEUROML);
+		saveInNeuroML.addActionListener(this);
 		
-		// button that centers neuron is creates and listener is added.
-		Button centerButton = new Button("Center");
-		centerButton.addActionListener(this);
 
 		// ceated buttons are added to panel.
 		add(saveInNeuron);
 		add(saveInGenesis);
-		add(centerButton);
+		add(saveInNeuroML);*/
+        
+        JLabel saveLabel = new JLabel("Save as:");
+        
+        //PopupMenu options = new PopupMenu("Save as...");
+        JComboBox options = new JComboBox();
+        options.setLightWeightPopupEnabled(false);
+        options.addActionListener(this);
+        options.addItem(neuronEditorPanel.SAVE_OPTION);
+        options.addItem(neuronEditorPanel.SAVE_NEURON);
+        options.addItem(neuronEditorPanel.SAVE_GENESIS);
+        options.addItem(neuronEditorPanel.SAVE_NEUROML_v1);
+        
+		add(saveLabel);
+		add(options);
+        
+		add(centerJButton);
 		add(sklProj);
 		add(areaProj);
+        
+        this.repaint();
 
 	}
 
@@ -638,11 +707,11 @@ class ModifiedOptionBar extends sbPanel implements ItemListener, ActionListener 
 	public void itemStateChanged(ItemEvent e) {
 		Object source = e.getSource();
 		if (e.getStateChange() == e.SELECTED) {
-			String sarg = (String) (e.getItem());
-			if (sarg.equalsIgnoreCase("skeleton projection")) {
+			String sarg = ((JRadioButton) (e.getItem())).getText();
+			if (sarg.equalsIgnoreCase(neuronEditorPanel.SKEL_PROJ)) {
 				neupan.setCellWindow();
 				neupan.neucan.setView(neupan.neucan.SPROJECTION);
-			} else if (sarg.equalsIgnoreCase("area projection")) {
+			} else if (sarg.equalsIgnoreCase(neuronEditorPanel.AREA_PROJ)) {
 				neupan.setCellWindow();
 				neupan.neucan.setView(neupan.neucan.APROJECTION);
 			} else {
@@ -653,14 +722,29 @@ class ModifiedOptionBar extends sbPanel implements ItemListener, ActionListener 
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		String sarg = ((Button) source).getLabel();
-		if (sarg.equals("Save in Neuron")) {
+            
+        //System.out.println("Handling event: "+e);
+        
+		String sarg = null;
+        if (source instanceof JButton) 
+            sarg = ((JButton) source).getLabel();
+        if (source instanceof JComboBox) 
+            sarg = ((JComboBox) source).getSelectedItem().toString();
+        
+		if (sarg.equals(neuronEditorPanel.SAVE_NEURON)) {
 			neupan.processNameEvent("save as hoc (Neuron) - named segments");
-		} else if (sarg.equals("Save in Genesis")) {
+		} else if (sarg.equals(neuronEditorPanel.SAVE_OPTION)) {
+			// do nothing...
+		} else if (sarg.equals(neuronEditorPanel.SAVE_GENESIS)) {
 			neupan.processNameEvent("save as Genesis - hierarchical");
+		} else if (sarg.equals(neuronEditorPanel.SAVE_NEUROML_v1)) {
+			neupan.processNameEvent(neuronEditorPanel.SAVE_NEUROML_v1);
 		} else if (sarg.equals("Center")) {
 			neupan.neucan.find();
-		}
+		} else {
+            System.out.println("Unable to process "+sarg+" for event: "+e);
+        }
+        
 
 	}
 
@@ -670,7 +754,7 @@ class ModifiedOptionBar extends sbPanel implements ItemListener, ActionListener 
 class optionBar extends sbPanel implements ItemListener, ActionListener {
 	Choice cfile;
 	neuronEditorPanel neupan;
-	Label FileNameL;
+	JLabel FileNameL;
 
 	optionBar(neuronEditorPanel p) {
 		neupan = p;
@@ -678,8 +762,8 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		setLayout(new FlowLayout());
 
 		Choice view = new Choice();
-		view.add("skeleton projection");
-		view.add("area projection");
+		view.add(neuronEditorPanel.SKEL_PROJ);
+		view.add(neuronEditorPanel.AREA_PROJ);
 		view.add("skeleton red-green");
 		view.add("area red-green");
 		view.add("area solid blue");
@@ -708,14 +792,14 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		add(pmfile);
 
 		popLabel pl = new popLabel("file", pmfile);
-		FileNameL = new Label("            null             ");
+		FileNameL = new JLabel("            null             ");
 
 		Choice cturn = new Choice();
 		cturn.add("continuous rotate");
 		cturn.add("cube rotate");
 		cturn.addItemListener(this);
 
-		Button brev = new Button("reverse");
+		JButton brev = new JButton("reverse");
 		brev.addActionListener(this);
 
 		add(pl);
@@ -747,8 +831,8 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if (source instanceof Button) {
-			String sarg = ((Button) source).getLabel();
+		if (source instanceof JButton) {
+			String sarg = ((JButton) source).getLabel();
 			if (sarg.equals("reverse")) {
 				neupan.reverseVideo();
 			}
@@ -763,7 +847,7 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 			neupan.neucan.setContinuousRotate(false);
 		} else if (sarg.equals("continuous rotate")) {
 			neupan.neucan.setContinuousRotate(true);
-		} else if (sarg.equals("skeleton projection")) {
+		} else if (sarg.equals(neuronEditorPanel.SKEL_PROJ)) {
 			neupan.setCellWindow();
 			neupan.neucan.setView(neupan.neucan.SPROJECTION);
 		} else if (sarg.equals("skeleton red-green")) {
@@ -772,7 +856,7 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		} else if (sarg.equals("area red-green")) {
 			neupan.setCellWindow();
 			neupan.neucan.setView(neupan.neucan.AREDGREEN);
-		} else if (sarg.equals("area projection")) {
+		} else if (sarg.equals(neuronEditorPanel.AREA_PROJ)) {
 			neupan.setCellWindow();
 			neupan.neucan.setView(neupan.neucan.APROJECTION);
 		} else if (sarg.equals("area solid blue")) {
@@ -808,7 +892,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 
 		setList(null);
 		webAdd = new TextField("http://www.neuro.soton.ac.uk/DigitisedCells/");
-		Button fetch = new Button("fetch list");
+		JButton fetch = new JButton("fetch list");
 		fetch.addActionListener(this);
 
 		GridBagLayout gbl = new GridBagLayout();
@@ -842,7 +926,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		listFrame = new Frame();
 		listFrame.setLayout(new BorderLayout());
 		listFrame.add("Center", list);
-		Button b = new Button("close");
+		JButton b = new JButton("close");
 		listFrame.add("South", b);
 		b.addActionListener(this);
 		listFrame.pack();
@@ -956,8 +1040,8 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if (source instanceof Button) {
-			String sarg = ((Button) source).getLabel();
+		if (source instanceof JButton) {
+			String sarg = ((JButton) source).getLabel();
 			if (sarg.equals("fetch list")) {
 				hostroot = webAdd.getText();
 				getIndexFromURL();

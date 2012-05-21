@@ -1,0 +1,14 @@
+The NeuroML project specifications.
+
+This package contains the main XSD specifications for the NeuroML project. 
+
+A web application has also been developed for online validation and transformation 
+of files. This is normally active at: 
+
+http://www.neuroml.org/NeuroMLValidator
+
+The latest version of the full NeuroML code can be found at the Subversion repository at:
+http://neuroml.svn.sourceforge.net/viewvc/neuroml/
+
+This code can be checked out with svn with the following:
+svn co https://neuroml.svn.sourceforge.net/svnroot/neuroml/trunk neuroml

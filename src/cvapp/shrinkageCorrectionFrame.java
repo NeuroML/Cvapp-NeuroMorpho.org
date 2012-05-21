@@ -23,9 +23,12 @@ package cvapp;
 */
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
-class shrinkageCorrectionFrame extends Frame implements ActionListener {
+class shrinkageCorrectionFrame extends JFrame implements ActionListener {
    neuronEditorCanvas cellC;
    headerFrame headerF;
    neulucData cell;
@@ -37,7 +40,7 @@ class shrinkageCorrectionFrame extends Frame implements ActionListener {
       cellC = c;
       setLayout (new BorderLayout());
       
-      Panel tfs = new Panel(); 
+      JPanel tfs = new JPanel(); 
       tfs.setLayout (new GridLayout (3, 1, 3, 5));
       
       tfx = new TextField ("1.0       ");
@@ -48,11 +51,11 @@ class shrinkageCorrectionFrame extends Frame implements ActionListener {
       tfs.add (new labelTF ("Y correction factor: ", tfy));
       tfs.add (new labelTF ("Z correction factor: ", tfz));
       
-      Panel buts = new Panel ();
+      JPanel buts = new JPanel();
       buts.setLayout (new GridLayout (1, 3, 2, 2));
-      Button bcancel = new Button ("cancel");
-      Button bapply = new Button ("apply");
-      Button bdone = new Button ("done");
+      JButton bcancel = new JButton ("cancel");
+      JButton bapply = new JButton ("apply");
+      JButton bdone = new JButton ("done");
       buts.add (bcancel);
       buts.add(bapply);
       buts.add(bdone);
@@ -99,8 +102,8 @@ class shrinkageCorrectionFrame extends Frame implements ActionListener {
 
    public void actionPerformed(ActionEvent e) {
       Object source = e.getSource();
-      if (source instanceof Button) {
-         String sarg = ((Button)source).getLabel();
+      if (source instanceof JButton) {
+         String sarg = ((JButton)source).getLabel();
 	 if (sarg.equals("cancel")) {
 	    setVisible(false);
 
@@ -120,7 +123,7 @@ class shrinkageCorrectionFrame extends Frame implements ActionListener {
 
 
 
-class labelTF extends Panel {
+class labelTF extends JPanel {
    labelTF (String s, TextField tf) {
       setLayout (new FlowLayout(FlowLayout.CENTER));
       add (new Label (s));

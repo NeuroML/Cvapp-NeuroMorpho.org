@@ -38,7 +38,7 @@ class neuromlWriter extends Object {
     private String morphologyOrigin;
     private int[] segPerTyp;
     private StringBuilder segmentContent;
-    private StringBuilder cableContent;
+    private StringBuilder groupContent;
     private NumberFormat form;
     
     private final static String INDENT = "  ";
@@ -66,11 +66,24 @@ class neuromlWriter extends Object {
             {
                 return "2alpha";
             }
+        },
+        NEUROML_VERSION_2_beta
+        {
+            @Override
+            public String toString()
+            {
+                return "2beta";
+            }
         };
 
         public boolean isVersion2()
         {
             return this.toString().startsWith("2");
+        }
+
+        public boolean isVersion2beta()
+        {
+            return this.equals(NEUROML_VERSION_2_beta);
         }
 
         public boolean isVersion1()
@@ -102,6 +115,18 @@ class neuromlWriter extends Object {
         if (points.size() < 2 || sectionTypes.length < 2 || !sectionTypes[1].equals("soma")) {
             System.out.println("error: null data or section types in hocWrite");
             return "";
+        }
+
+        String cellName = "cell1";
+        try{
+            File f = new File(morphologyOrigin);
+            cellName = f.getName();
+            if (cellName.endsWith(".swc"))
+                cellName = cellName.substring(0,cellName.length()-4);
+            cellName = cellName.replace(".", "_");
+            cellName = cellName.replace("-", "_");
+        } catch (Exception e) {
+            // stick with original name
         }
 
         //default starting point;
@@ -141,45 +166,64 @@ class neuromlWriter extends Object {
 
         //sb1 = new StringBuilder();
         segmentContent = new StringBuilder();
-        cableContent = new StringBuilder();
+        groupContent = new StringBuilder();
 
-        segmentContent.append(INDENT+INDENT+INDENT+"<segments xmlns=\"http://morphml.org/morphml/schema\">\n\n");
-        cableContent.append("\n"+INDENT+INDENT+INDENT+"<cables xmlns=\"http://morphml.org/morphml/schema\">\n\n");
+        if (version.isVersion1()) {
+            segmentContent.append(INDENT+INDENT+INDENT+"<segments xmlns=\"http://morphml.org/morphml/schema\">\n\n");
+            groupContent.append("\n"+INDENT+INDENT+INDENT+"<cables xmlns=\"http://morphml.org/morphml/schema\">\n\n");
+        } else if (version.isVersion2beta()) {
+            segmentContent.append(INDENT+INDENT+INDENT+"<morphology id=\"morphology_"+cellName+"\">\n\n");
+        }
+
 
 
         // write the points to mainContent;
-        parseTree(startPoint, startPoint, true, true);
+        parseTree(startPoint, startPoint, true, true, version);
+
 
 
         StringBuilder sbf = new StringBuilder();
-        
-        sbf.append("<neuroml xmlns=\"http://morphml.org/neuroml/schema\"\n"+
-            INDENT+"xmlns:meta=\"http://morphml.org/metadata/schema\"\n"+
-            INDENT+"xmlns:mml=\"http://morphml.org/morphml/schema\"\n"+
-            INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
-            INDENT+"xsi:schemaLocation=\"http://morphml.org/neuroml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level1/NeuroML_Level1_v1.8.1.xsd\"\n"+
-            INDENT+"length_units=\"micrometer\">\n\n");
-        
-        sbf.append(INDENT+"<cells>\n");
-        String cellName = "cell1";
 
-        try{
-            File f = new File(morphologyOrigin);
-            cellName = f.getName();
-            if (cellName.endsWith(".swc"))
-                cellName = cellName.substring(0,cellName.length()-4);
-            cellName = cellName.replace(".", "_");
-        } catch (Exception e) {
-            // stick with original name
+        if (version.isVersion1())
+        {
+            sbf.append("<neuroml xmlns=\"http://morphml.org/neuroml/schema\"\n"+
+                INDENT+"xmlns:meta=\"http://morphml.org/metadata/schema\"\n"+
+                INDENT+"xmlns:mml=\"http://morphml.org/morphml/schema\"\n"+
+                INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
+                INDENT+"xsi:schemaLocation=\"http://morphml.org/neuroml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level1/NeuroML_Level1_v1.8.1.xsd\"\n"+
+                INDENT+"length_units=\"micrometer\">\n\n");
+        } else if (version.isVersion2beta()) {
+
+            sbf.append("<neuroml xmlns=\"http://www.neuroml.org/schema/neuroml2\"\n"+
+                INDENT+"xmlns:meta=\"http://morphml.org/metadata/schema\"\n"+
+                INDENT+"xmlns:mml=\"http://morphml.org/morphml/schema\"\n"+
+                INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
+                INDENT+"xsi:schemaLocation=\"http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd\"\n"+
+                INDENT+"id=\""+cellName+"\">\n\n");
         }
 
-        sbf.append(INDENT+INDENT+"<cell name=\""+cellName+"\">\n");
-        sbf.append(INDENT+INDENT+INDENT+"<meta:notes>\n        Neuronal morphology exported in NeuroML v"+version+" from CVapp (NeuroMorpho.org version)\n"
-            + "        Original file: "+morphologyOrigin+" </meta:notes>\n\n");
+        String metaPrefix="";
+
+        if (version.isVersion1()){
+            sbf.append(INDENT+"<cells>\n");
+            sbf.append(INDENT+INDENT+"<cell name=\""+cellName+"\">\n");
+            metaPrefix = "meta:";
+
+        } else if (version.isVersion2beta()){
+            
+            sbf.append(INDENT+"<cell id=\""+cellName+"\">\n");
+        }
+
+        sbf.append(INDENT+INDENT+INDENT+"<"+metaPrefix+"notes>\n        Neuronal morphology exported in NeuroML v"+version+" from CVapp (NeuroMorpho.org version)\n"
+            + "        Original file: "+morphologyOrigin+" </"+metaPrefix+"notes>\n\n");
         
        
-        
-        segmentContent.append(INDENT+INDENT+INDENT+"</segments>\n");
+
+        if (version.isVersion1()){
+            segmentContent.append(INDENT+INDENT+INDENT+"</segments>\n");
+            groupContent.append(INDENT+INDENT+INDENT+"</cables>\n\n");
+        } else if (version.isVersion2beta()){
+        }
         
         if (segmentContent.indexOf(UNKNOWN_PARENT)>0)
         {
@@ -188,11 +232,18 @@ class neuromlWriter extends Object {
         
         sbf.append(segmentContent);
         
-        cableContent.append(INDENT+INDENT+INDENT+"</cables>\n\n");
-        sbf.append(cableContent);
+        sbf.append(groupContent);
         
-        sbf.append(INDENT+INDENT+"</cell>\n");
-        sbf.append(INDENT+"</cells>\n");
+
+        if (version.isVersion1())
+        {
+            sbf.append(INDENT+INDENT+"</cell>\n");
+            sbf.append(INDENT+"</cells>\n");
+        } else if (version.isVersion2beta())
+        {
+            sbf.append(INDENT+INDENT+INDENT+"</morphology>\n\n");
+            sbf.append(INDENT+"</cell>\n");
+        }
         
         sbf.append("</neuroml>\n");
 
@@ -269,7 +320,7 @@ class neuromlWriter extends Object {
         return groups;
     }
 
-    public void parseTree(nlpoint parentPoint, nlpoint thisPoint, boolean newCable, boolean newCell) {
+    public void parseTree(nlpoint parentPoint, nlpoint thisPoint, boolean newCable, boolean newCell, NeuroMLVersion version) {
         
         if (verbose) System.out.println("\n-- Handling point: "+thisPoint+"NewCable: "+newCable+"\n-- With parent point: "+parentPoint);
         
@@ -328,7 +379,8 @@ class neuromlWriter extends Object {
                 
             if (verbose) System.out.println("pointIndicesVsSegIds: "+ pointIndicesVsSegIds);
             
-            
+            String parentElementV2 = "";
+
             // Add parent segment details
             if (segId>0 && parentPoint.myIndex>=0) {
                 if (!pointIndicesVsSegIds.containsKey(parentPoint.myIndex)) {
@@ -340,13 +392,22 @@ class neuromlWriter extends Object {
                         && pointIndicesVsSegIds.containsKey(parentPoint.pnbr[0].myIndex)) // parent of missing parent has known index
                     {
                         int parSegId = pointIndicesVsSegIds.get(parentPoint.pnbr[0].myIndex);
-                        segmentContent.append(" parent=\""+parSegId+"\"");
+                        if (version.isVersion1()) {
+                            segmentContent.append(" parent=\""+parSegId+"\"");
+                        } else {
+                            parentElementV2 = "<parent segment=\""+parSegId+"\"/>";
+                        }
+
                         appendDisjointedProximal = true;
                     }
                     else if (parentPoint.pnbr[0].nlcode==1 // parent of missing parent is soma
                         && parentPoint.pnbr[0].myIndex==0 ) // parent of missing parent is start of soma
                     {
-                        segmentContent.append(" parent=\"0\"");
+                        if (version.isVersion1()) {
+                            segmentContent.append(" parent=\"0\"");
+                        } else {
+                            parentElementV2 = "<parent segment=\"0\"/>";
+                        }
                         appendDisjointedProximal = true;
                     }
                     /*else if (parentPoint.pnbr[0].pnbr[0].nlcode==1 // parent of missing parent is soma
@@ -355,15 +416,28 @@ class neuromlWriter extends Object {
                         appendDisjointedProximal = true;
                     }*/
                     else {
-                        segmentContent.append(" parent=\""+UNKNOWN_PARENT+parentPoint.myIndex+"\"");
+                        if (version.isVersion1()) {
+                            segmentContent.append(" parent=\""+UNKNOWN_PARENT+parentPoint.myIndex+"\"");
+                        } else {
+                            parentElementV2 = "<parent segment=\""+UNKNOWN_PARENT+parentPoint.myIndex+"\"/>";
+                        }
                     }
                 } else {
                     int parSegId = pointIndicesVsSegIds.get(parentPoint.myIndex);
-                    segmentContent.append(" parent=\""+parSegId+"\"");
+                    if (version.isVersion1()) {
+                        segmentContent.append(" parent=\""+parSegId+"\"");
+                    } else {
+                        parentElementV2 = "<parent segment=\""+parSegId+"\"/>";
+                    }
                 }
             }
-            
-            segmentContent.append(" cable=\""+cableId+"\">\n");
+
+            if(version.isVersion1())
+            {
+                segmentContent.append(" cable=\""+cableId+"\">\n");
+            } else {
+                segmentContent.append(">\n"+INDENT+INDENT+INDENT+INDENT+INDENT+parentElementV2+"\n");
+            }
             
             if (appendDisjointedProximal || newCable) {
                 pointAppend(parentPoint, 0.0, "proximal");
@@ -386,16 +460,31 @@ class neuromlWriter extends Object {
         
         
         if (newCable) {
-            
-            String fractInfo = (fractAlongParentCable==1)?"":" fract_along_parent=\""+fractAlongParentCable+"\"";
-            cableContent.append(INDENT+INDENT+INDENT+INDENT+"<cable id=\""+cableId+"\" name=\""+segmentName(thisType)+"_"+form.format(segPerTyp[thisType])+"\""+fractInfo+">\n");
-            if (verbose) cableContent.append(INDENT+INDENT+INDENT+INDENT+"<!-- \n"+thisPoint.toString()+"\n -->\n");
-            for (String group: getGroupsForType(thisPoint)){
-                cableContent.append(INDENT+INDENT+INDENT+INDENT+INDENT+"<meta:group>"+group+"</meta:group>\n");
+
+            if (version.isVersion1()) {
+                String fractInfo = (fractAlongParentCable==1)?"":" fract_along_parent=\""+fractAlongParentCable+"\"";
+                groupContent.append(INDENT+INDENT+INDENT+INDENT+"<cable id=\""+cableId+"\" name=\""+segmentName(thisType)+"_"+form.format(segPerTyp[thisType])+"\""+fractInfo+">\n");
+                if (verbose) groupContent.append(INDENT+INDENT+INDENT+INDENT+"<!-- \n"+thisPoint.toString()+"\n -->\n");
+                for (String group: getGroupsForType(thisPoint)){
+                    groupContent.append(INDENT+INDENT+INDENT+INDENT+INDENT+"<meta:group>"+group+"</meta:group>\n");
+                }
+
+                groupContent.append(INDENT+INDENT+INDENT+INDENT+"</cable>\n\n");
+            } else if (version.isVersion2beta()) {
+                String fractInfo = (fractAlongParentCable==1)?"":" fract_along_parent=\""+fractAlongParentCable+"\"";
+                groupContent.append(INDENT+INDENT+INDENT+"<segmentGroup id=\""+cableId+"\" "+fractInfo+">\n");
+                if (verbose) groupContent.append(INDENT+INDENT+INDENT+"<!-- \n"+thisPoint.toString()+"\n -->\n");
+                for (String group: getGroupsForType(thisPoint)){
+
+                    //<include segmentGroup="parallelFiberNeg"/>
+                    groupContent.append(INDENT+INDENT+INDENT+INDENT+"<include segmentGroup=\""+group+"\"/>\n");
+                }
+
+                groupContent.append(INDENT+INDENT+INDENT+"</segmentGroup>\n\n");
+
             }
-            
-            cableContent.append(INDENT+INDENT+INDENT+INDENT+"</cable>\n\n");
             segPerTyp[thisType]++;
+
             
         } 
         
@@ -426,7 +515,7 @@ class neuromlWriter extends Object {
                     newCable = true;
                     
                 //System.out.println("----------------\nthisPoint: "+thisPoint+"nextPoint: "+nextPoint+", newCable: "+newCable+", diffTypeAnyNeighb: "+diffTypeAnyNeighb);
-                parseTree(thisPoint, nextPoint, newCable, false);
+                parseTree(thisPoint, nextPoint, newCable, false, version);
             }
         }
         

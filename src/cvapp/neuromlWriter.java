@@ -45,9 +45,13 @@ class neuromlWriter extends Object {
     
     private HashMap<Integer, Integer> cableIdsVsIndices = new HashMap<Integer, Integer>();
     private HashMap<Integer, Integer> pointIndicesVsSegIds = new HashMap<Integer, Integer>();
+
+    private Hashtable<String, ArrayList<String>> segmentGroups = new Hashtable<String, ArrayList<String>>();
     
     private int nextSegmentId = 0;
     private int nextCableId = 0;
+
+    private String CABLE_PREFIX_V2 = "Cable_";
 
     public enum NeuroMLVersion
     {
@@ -223,6 +227,27 @@ class neuromlWriter extends Object {
             segmentContent.append(INDENT+INDENT+INDENT+"</segments>\n");
             groupContent.append(INDENT+INDENT+INDENT+"</cables>\n\n");
         } else if (version.isVersion2beta()){
+            for(String key: segmentGroups.keySet())
+            {
+                ArrayList<String> members = segmentGroups.get(key);
+                StringBuilder sb = new StringBuilder();
+                sb.append(INDENT+INDENT+INDENT+INDENT+"<segmentGroup id=\""+key+"\" >\n");
+                for (String member: members) {
+                    if (member.startsWith(CABLE_PREFIX_V2)) {
+                        sb.append(INDENT+INDENT+INDENT+INDENT+INDENT+"<include segmentGroup=\""+member+"\"/>\n");
+                    } else {
+                        sb.append(INDENT+INDENT+INDENT+INDENT+INDENT+"<member segment=\""+member+"\"/>\n");
+                    }
+                }
+                sb.append(INDENT+INDENT+INDENT+INDENT+"</segmentGroup>\n\n");
+                if (key.startsWith(CABLE_PREFIX_V2)) {
+                    groupContent.insert(0, sb);
+                } else {
+                    groupContent.append(sb);
+                }
+
+
+            }
         }
         
         if (segmentContent.indexOf(UNKNOWN_PARENT)>0)
@@ -242,6 +267,19 @@ class neuromlWriter extends Object {
         } else if (version.isVersion2beta())
         {
             sbf.append(INDENT+INDENT+INDENT+"</morphology>\n\n");
+            sbf.append("<!--NOTE: TEMPORARILY adding default biophysical parameters to test visualisation of NML2 cells on OSB-->\n");
+            sbf.append("<biophysicalProperties id=\"biophys\">\n");
+            sbf.append("<membraneProperties>\n");
+            sbf.append("<channelDensity condDensity=\"0.02812149 mS_per_cm2\" id=\"pas_all\" ionChannel=\"pas\" ion=\"non_specific\" erev=\"-66.0 mV\"/>\n");
+            sbf.append("<spikeThresh value=\"0 mV\"/>\n");
+            sbf.append("<specificCapacitance value=\"1.57 uF_per_cm2\"/>\n");
+            sbf.append("<initMembPotential value=\"-60.0 mV\"/>\n");
+            sbf.append("</membraneProperties>\n");
+            sbf.append("<intracellularProperties>\n");
+            sbf.append("<resistivity value=\"0.3 kohm_cm\"/>\n");
+            sbf.append("</intracellularProperties>\n");
+            sbf.append("</biophysicalProperties>\n\n");
+
             sbf.append(INDENT+"</cell>\n");
         }
         
@@ -436,7 +474,7 @@ class neuromlWriter extends Object {
             {
                 segmentContent.append(" cable=\""+cableId+"\">\n");
             } else {
-                segmentContent.append(">\n"+INDENT+INDENT+INDENT+INDENT+INDENT+parentElementV2+"\n");
+                segmentContent.append("> <!-- \"Cable\" is "+cableId+"-->\n"+INDENT+INDENT+INDENT+INDENT+INDENT+parentElementV2+"\n");
             }
             
             if (appendDisjointedProximal || newCable) {
@@ -456,7 +494,17 @@ class neuromlWriter extends Object {
             pointAppend(thisPoint, 0.0, "distal");
 
             segmentContent.append(INDENT+INDENT+INDENT+INDENT+"</segment>  "+"\n\n");
+
+            if (version.isVersion2beta()) {
+                String cableName = CABLE_PREFIX_V2+cableId;
+                if (!segmentGroups.containsKey(cableName)) {
+                    segmentGroups.put(cableName, new ArrayList<String>());
+                }
+                ArrayList<String> members = segmentGroups.get(cableName);
+                members.add(segId+"");
+            }
         }
+
         
         
         if (newCable) {
@@ -471,16 +519,27 @@ class neuromlWriter extends Object {
 
                 groupContent.append(INDENT+INDENT+INDENT+INDENT+"</cable>\n\n");
             } else if (version.isVersion2beta()) {
+                
+
+                for (String group: getGroupsForType(thisPoint)){
+                    if (!segmentGroups.containsKey(group)) {
+                        segmentGroups.put(group, new ArrayList<String>());
+                    }
+                    ArrayList<String> segments = segmentGroups.get(group);
+                    segments.add(CABLE_PREFIX_V2+cableId);
+                }
+
+                /*
                 String fractInfo = (fractAlongParentCable==1)?"":" fract_along_parent=\""+fractAlongParentCable+"\"";
-                groupContent.append(INDENT+INDENT+INDENT+"<segmentGroup id=\""+cableId+"\" "+fractInfo+">\n");
+                groupContent.append(INDENT+INDENT+INDENT+INDENT+"<segmentGroup id=\""+cableId+"\" "+fractInfo+">\n");
                 if (verbose) groupContent.append(INDENT+INDENT+INDENT+"<!-- \n"+thisPoint.toString()+"\n -->\n");
                 for (String group: getGroupsForType(thisPoint)){
 
                     //<include segmentGroup="parallelFiberNeg"/>
-                    groupContent.append(INDENT+INDENT+INDENT+INDENT+"<include segmentGroup=\""+group+"\"/>\n");
+                    groupContent.append(INDENT+INDENT+INDENT+INDENT+INDENT+"<include segmentGroup=\""+group+"\"/>\n");
                 }
 
-                groupContent.append(INDENT+INDENT+INDENT+"</segmentGroup>\n\n");
+                groupContent.append(INDENT+INDENT+INDENT+INDENT+"</segmentGroup>\n\n");*/
 
             }
             segPerTyp[thisType]++;

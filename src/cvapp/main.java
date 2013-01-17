@@ -225,15 +225,33 @@ public class main implements Runnable/*extends JApplet*/ {
 
         // NeuroML save...
 
-        String nmlFileName = rootFileName+".xml";
-        File nmlFile = new File(tempDir, nmlFileName);
+        String nml1FileName = rootFileName+".xml";
+        File nml1File = new File(tempDir, nml1FileName);
 
+        nep.writeStringToFile(nep.getCell().writeNeuroML_v1_8_1(), nml1File.getAbsolutePath());
 
-        nep.writeStringToFile(nep.getCell().writeNeuroML_v1_8_1(), nmlFile.getAbsolutePath());
+        System.out.println("Saved NeuroML representation of the file to: "+nml1File.getAbsolutePath()+": "+nml1File.exists());
 
-        System.out.println("Saved NeuroML representation of the file to: "+nmlFile.getAbsolutePath()+": "+nmlFile.exists());
+        File v1schemaFile = new File("Schemas/v1.8.1/Level3/NeuroML_Level3_v1.8.1.xsd");
+
+        validateXML(nml1File, v1schemaFile);
+
+        String nml2FileName = rootFileName+".nml";
+        File nml2File = new File(tempDir, nml2FileName);
+
+        nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
+
+        System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
+
+        File v2schemaFile = new File("Schemas/NeuroML2/NeuroML_v2beta.xsd");
+
+        validateXML(nml2File, v2schemaFile);
         
-        File schemaFile = new File("Schemas/v1.8.1/Level3/NeuroML_Level3_v1.8.1.xsd");
+    }
+
+    private static void validateXML(File nmlFile, File schemaFile)
+    {
+
         try
         {
             Source schemaFileSource = new StreamSource(schemaFile);

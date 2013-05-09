@@ -1,0 +1,2 @@
+load_file("nrngui.hoc")
+xopen("EC2-609291-4.CNG.hoc")             // geometry file

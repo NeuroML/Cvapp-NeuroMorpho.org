@@ -1,7 +1,7 @@
 //  NEURON hoc file generated from CVapp (NeuroMorpho.org version)
 //  Original file: EC2-609291-4.CNG.swc 
 
-//  Generated Mon Mar 19 16:23:59 EDT 2012
+//  Generated Thu May 09 20:36:18 BST 2013
 
 {create soma[1]}
 {create axon[659]}
@@ -1361,6 +1361,9 @@ dendrite[11] {
   pt3dadd(-2833.4,1855.7,91.43,0.22) 
   pt3dadd(-2833.8,1855.4,91.42,0.22) 
   pt3dadd(-2833.7,1854.6,91.41,0.22) 
+
+} // Breaking long procedure...
+dendrite[11] {
   pt3dadd(-2834.1,1854.3,91.41,0.22) 
   pt3dadd(-2834.1,1853.9,91.41,0.22) 
   pt3dadd(-2834.3,1853.4,91.4,0.22) 
@@ -6659,6 +6662,9 @@ apical_dendrite[13] {
   pt3dadd(-3003.1,2147.9,89.13,0.22) 
   pt3dadd(-3004.5,2149.1,89.14,0.22) 
   pt3dadd(-3004.5,2149.5,89.14,0.22) 
+
+} // Breaking long procedure...
+apical_dendrite[13] {
   pt3dadd(-3004.3,2149.5,89.14,0.22) 
 
 } // end of points list
@@ -6968,6 +6974,9 @@ apical_dendrite[14] {
   pt3dadd(-2894.2,2112.5,0.42,0.22) 
   pt3dadd(-2896.4,2112.5,1.64,0.22) 
   pt3dadd(-2896.8,2112.3,1.64,0.22) 
+
+} // Breaking long procedure...
+apical_dendrite[14] {
   pt3dadd(-2897,2112.1,1.64,0.22) 
   pt3dadd(-2897.3,2111.8,1.64,0.22) 
   pt3dadd(-2897.5,2111.6,1.64,0.22) 
@@ -31981,6 +31990,9 @@ axon[608] {
   pt3dadd(-2567.69,1033.7,209.97,0.22) 
   pt3dadd(-2564.3,1034.2,209.69,0.22) 
   pt3dadd(-2563.9,1034.4,209.69,0.22) 
+
+} // Breaking long procedure...
+axon[608] {
   pt3dadd(-2563.4,1034.5,209.69,0.22) 
   pt3dadd(-2563.19,1034.7,209.7,0.22) 
   pt3dadd(-2562.6,1035,209.7,0.22) 

@@ -151,8 +151,9 @@
             <jvmarg value="-Xmx100M" />
             <classpath refid="test.class.path"/>
             <!--<arg value="spherSomaSwc/A9-May23-IR1-6-K.CNG.swc"/>
-            <arg value="twoCylSwc/A2-June2-IR1-1-A.CNG.swc.swc"/>-->
-            <arg value="caseExamples/Case1_new.swc"/>
+            <arg value="twoCylSwc/A2-June2-IR1-1-A.CNG.swc.swc"/>
+            <arg value="caseExamples/Case1_new.swc"/>-->
+            <arg value="originalSwc/17.CNG.swc"/>
             <arg value="-testone"/>
         </java>
     </target>

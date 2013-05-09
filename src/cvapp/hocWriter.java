@@ -41,6 +41,10 @@ class hocWriter extends Object {
     private ArrayList<nlpoint> allSomaPoints = new ArrayList<nlpoint>();
 
     boolean substitutedCylSoma = false;
+    
+    int countLines = 0;
+    int maxLines = 300;
+    String currentSectionName = null;
 
     public hocWriter(Vector<nlpoint> pts, String[] st, String morphologyOrigin) {
         points = pts;
@@ -97,6 +101,9 @@ class hocWriter extends Object {
         String nSectionName = segmentName(ityp) + "[" + form.format(segPerTyp[ityp]) + "]";
 
         if (newseg) {
+            countLines = 0;
+            currentSectionName = nSectionName;
+            
             mysegind = segPerTyp[ityp];
 
             if (ppar == p /* First point...*/) {
@@ -142,10 +149,17 @@ class hocWriter extends Object {
 
                 }
             }
-        }
+        } // end if (newseg)
 
         if (!singleSomaPoint) {
+            if (countLines>=maxLines) {
+                
+                pointsInfo.append("\n} // Breaking long procedure...\n" + currentSectionName + " {\n");
+                countLines = 0;
+            }
+            //pointsInfo.append("Line: "+countLines+"\n");
             pt3dappend(p, 0.0);
+            countLines++;
         }
         p.imark = 1;
 

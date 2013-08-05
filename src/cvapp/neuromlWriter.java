@@ -199,8 +199,6 @@ class neuromlWriter extends Object {
         } else if (version.isVersion2beta()) {
 
             sbf.append("<neuroml xmlns=\"http://www.neuroml.org/schema/neuroml2\"\n"+
-                INDENT+"xmlns:meta=\"http://morphml.org/metadata/schema\"\n"+
-                INDENT+"xmlns:mml=\"http://morphml.org/morphml/schema\"\n"+
                 INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
                 INDENT+"xsi:schemaLocation=\"http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd\"\n"+
                 INDENT+"id=\""+cellName+"\">\n\n");

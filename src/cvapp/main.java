@@ -243,9 +243,7 @@ public class main implements Runnable/*extends JApplet*/ {
 
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-        File v2schemaFile = new File("Schemas/NeuroML2/NeuroML_v2beta.xsd");
-
-        validateXML(nml2File, v2schemaFile);
+        validateXMLWithURL(nml2File, "https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd");
         
     }
 
@@ -255,9 +253,6 @@ public class main implements Runnable/*extends JApplet*/ {
         try
         {
             Source schemaFileSource = new StreamSource(schemaFile);
-
-            //schemaFile = "http://sourceforge.net/apps/trac/neuroml/export/809/NeuroML2/Schemas/NeuroML2/NeuroML_v2alpha.xsd";
-            //schemaFileSource = new StreamSource(schemaFile);
 
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -275,6 +270,34 @@ public class main implements Runnable/*extends JApplet*/ {
         catch (Exception ex)
         {
             System.err.println("Problem validating xml file: "+ nmlFile.getAbsolutePath()+" according to "+schemaFile+"!!!");
+            ex.printStackTrace();
+
+            System.exit(1);
+        }
+    }
+    private static void validateXMLWithURL(File nmlFile, String schemaUrl)
+    {
+
+        try
+        {
+            Source schemaFileSource = new StreamSource(schemaUrl);
+
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            Schema schema = factory.newSchema(schemaFileSource);
+
+            Validator validator = schema.newValidator();
+
+            Source xmlFileSource = new StreamSource(nmlFile);
+
+            validator.validate(xmlFileSource);
+
+            System.out.println("****   File: "+nmlFile+" is VALID according to "+schemaUrl+"!!!    ****");
+
+        }
+        catch (Exception ex)
+        {
+            System.err.println("Problem validating xml file: "+ nmlFile.getAbsolutePath()+" according to "+schemaUrl+"!!!");
             ex.printStackTrace();
 
             System.exit(1);

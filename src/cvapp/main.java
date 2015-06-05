@@ -76,9 +76,12 @@ public class main implements Runnable/*extends JApplet*/ {
         if ((new File(a)).exists()){
             baseDir = (new File(a)).getParentFile();
         }
+            
         
         try {
             
+            File root = new File(main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile();
+        
             if (!a.startsWith("http://")&&!a.startsWith("file://")){
                 a = "file://"+(new File(a)).getCanonicalPath();
             }
@@ -134,8 +137,8 @@ public class main implements Runnable/*extends JApplet*/ {
                 nep.writeStringToFile(nep.getCell().writeNeuroML_v1_8_1(), nml1File.getAbsolutePath());
 
                 System.out.println("Saved NeuroML representation of the file to: "+nml1File.getAbsolutePath()+": "+nml1File.exists());
-
-                File v1schemaFile = new File("Schemas/v1.8.1/Level3/NeuroML_Level3_v1.8.1.xsd");
+                
+                File v1schemaFile = new File(root, "Schemas/v1.8.1/Level3/NeuroML_Level3_v1.8.1.xsd");
 
                 validateXML(nml1File, v1schemaFile);
                 
@@ -159,8 +162,7 @@ public class main implements Runnable/*extends JApplet*/ {
 
                 System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-
-                validateXML(nml2File, new File("Schemas/v2/NeuroML_v2beta3.xsd"));
+                validateXML(nml2File, new File(root, "Schemas/v2/NeuroML_v2beta3.xsd"));
                 
                 System.exit(0);
             }

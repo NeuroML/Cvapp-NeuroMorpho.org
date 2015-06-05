@@ -28,17 +28,18 @@ import javax.swing.*;
 class neuronEditorFrame extends JFrame implements WindowListener {
 
     neuronEditorPanel neupan;
+    boolean supressGui = false;
 
-    neuronEditorFrame(int w, int h) {
+    neuronEditorFrame(int w, int h, boolean supressGui) {
         //super ("cvapp 1.2  98-09-22");
         
-
+        this.supressGui = supressGui;
         Font f = getFont();
         Container content = this.getContentPane();
 
         content.setFont(f);
 
-        neupan = new neuronEditorPanel(w, h, f);
+        neupan = new neuronEditorPanel(w, h, f, supressGui);
         content.setLayout(new BorderLayout());
         content.add("Center", neupan);
         this.setSize(w, h);

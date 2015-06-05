@@ -32,6 +32,8 @@ import javax.swing.*;
 
 class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
     
+    boolean supressGui = false;
+    
 	graphData3 neugd;
 	neuronEditorCanvas neucan;
 	rescalableFloatSlider rsfsxscale;
@@ -79,7 +81,9 @@ class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
             
 
 
-	neuronEditorPanel(int w, int h, Font f) {
+	neuronEditorPanel(int w, int h, Font f, boolean supressGui) {
+        
+        this.supressGui = supressGui;
 
 		neugd = new graphData3();
 
@@ -602,23 +606,28 @@ class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
 	}
 
 	public void blockingMessageOn(String s) {
-        ((JLabel)messageD.getContentPane().getComponent(0)).setText(s);
-        ((JLabel)messageD.getContentPane().getComponent(1)).setText("");
-        messageD.pack();
-		Point p = getLocationOnScreen();
-		messageD.setLocation(p.x + 100, p.y + 20);
-		messageD.setVisible(true);
+        if (!supressGui) {
+            ((JLabel)messageD.getContentPane().getComponent(0)).setText(s);
+            ((JLabel)messageD.getContentPane().getComponent(1)).setText("");
+            messageD.pack();
+            Point p = getLocationOnScreen();
+            messageD.setLocation(p.x + 100, p.y + 20);
+            messageD.setVisible(true);
+        }
 	}
 
 	public void blockingMessageOn(String s1, String s2) {
-		if (messageD != null) {
-			((JLabel)messageD.getContentPane().getComponent(0)).setText(s1);
-			((JLabel)messageD.getContentPane().getComponent(1)).setText(s2);
-            messageD.pack();
-			Point p = getLocationOnScreen();
-			messageD.setLocation(p.x + 100, p.y + 20);
-            messageD.setVisible(true);
-		}
+        
+        if (!supressGui) {
+            if (messageD != null) {
+                ((JLabel)messageD.getContentPane().getComponent(0)).setText(s1);
+                ((JLabel)messageD.getContentPane().getComponent(1)).setText(s2);
+                messageD.pack();
+                Point p = getLocationOnScreen();
+                messageD.setLocation(p.x + 100, p.y + 20);
+                messageD.setVisible(true);
+            }
+        }
 	}
 
 	public void blockingMessageOff() {

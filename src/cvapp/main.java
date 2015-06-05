@@ -21,6 +21,8 @@ JNLP file present on the website are used to call the code and give the necessar
 public class main implements Runnable/*extends JApplet*/ {
 
     public static final String TEST_FLAG = "-test";
+    public static final String TEST_NOGUI_FLAG = "-testnogui";
+    public static final String NOGUI_FLAG = "-nogui";
     public static final String TEST_ONE_FLAG = "-testone";
     //public static final String NML_ONLY_FLAG = "-nml";
     
@@ -75,14 +77,23 @@ public class main implements Runnable/*extends JApplet*/ {
                 a = "file://"+(new File(a)).getCanonicalPath();
             }
                    
+            
+            boolean supressGui = false;
+            
+            if (myArgs.length==2 && 
+                    (myArgs[1].equals(TEST_NOGUI_FLAG) || myArgs[1].equals(NOGUI_FLAG))){
+                supressGui = true;
+            }
+            
             neuronEditorFrame nef = null;
-            nef = new neuronEditorFrame(700, 600);
+            nef = new neuronEditorFrame(700, 600, supressGui);
 
             //nef.validate();
             nef.pack();
             centerWindow(nef);
             
-            nef.setVisible(true);
+            
+            nef.setVisible(!supressGui);
           
 
             nef.setReadWrite(true, true);
@@ -95,13 +106,14 @@ public class main implements Runnable/*extends JApplet*/ {
             
             nef.setTitle("3DViewer (Modified from CVAPP with permission)-Neuron: " + fileName);
             nef.loadFile(sdata, directory, fileName);
+            System.out.println("Loaded: "+fileName);
 
             if (myArgs.length==2 && myArgs[1].equals(TEST_ONE_FLAG)){
                 //Thread.sleep(1000);
                 doTests(nef, fileName);
             }
 
-            if (myArgs.length==2 && myArgs[1].equals(TEST_FLAG)){
+            if (myArgs.length==2 && (myArgs[1].equals(TEST_FLAG) || (myArgs[1].equals(TEST_NOGUI_FLAG)))){
                 //Thread.sleep(1000);
                 doTests(nef, fileName);
                 
@@ -138,6 +150,9 @@ public class main implements Runnable/*extends JApplet*/ {
                         doTests(nef, f.getAbsolutePath());
                     }
                 }
+                
+                if (supressGui)
+                    System.exit(0);
             }
            
         } catch (Exception exception) {

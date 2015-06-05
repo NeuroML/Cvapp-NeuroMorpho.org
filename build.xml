@@ -122,6 +122,19 @@
         </java>
     </target>
 
+    <target name="testnogui" depends="clean, jar"
+            description="Tests the main code">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <java classname="${main.class}" fork="true">
+            <jvmarg value="-Xmx100M" />
+            <classpath refid="test.class.path"/>
+            <arg value="examples/dCH-cobalt.CNG.swc"/>
+            <arg value="-testnogui"/>
+        </java>
+    </target>
+
     <target name="testnml" depends="clean, jar"
             description="Tests the main code">
 

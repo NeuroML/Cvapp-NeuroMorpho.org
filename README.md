@@ -1,7 +1,7 @@
 ### Cvapp for NeuroMorpho.org
 
-This is a version of [Cvapp](http://www.compneuro.org/CDROM/docs/cvapp.html) customised as a 
-3D viewer for http://neuromorpho.org with updated export functionality for NEURON, 
+This is a version of [Cvapp](http://www.compneuro.org/CDROM/docs/cvapp.html), originally developed by Robert Cannon,
+which has been customised as a 3D viewer for http://neuromorpho.org with updated export functionality for NEURON, 
 GENESIS & NeuroML versions 1 & 2.
 
 This application is available to use (through Java Webstart) on NeuroMorpho.org. 

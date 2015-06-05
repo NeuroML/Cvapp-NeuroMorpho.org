@@ -28,8 +28,12 @@ import javax.swing.JFrame;
 
 public class cvapp extends Applet implements ActionListener {
 
-    public cvapp() {
+    boolean supressGui = false;
+    
+    public cvapp(boolean supressGui) {
+        
         super();
+        this.supressGui = supressGui;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class cvapp extends Applet implements ActionListener {
         setLayout(new BorderLayout());
         Font f = new Font("8x13", Font.PLAIN, 13);
 
-        neuronEditorPanel neupan = new neuronEditorPanel(w, h, f);
+        neuronEditorPanel neupan = new neuronEditorPanel(w, h, f, supressGui);
 
         neupan.setParentFrame(new JFrame());
 
@@ -72,10 +76,10 @@ public class cvapp extends Applet implements ActionListener {
                 int w = d.width;
                 int h = d.height;
                 neuronEditorFrame nef =
-                    new neuronEditorFrame(w, h);
+                    new neuronEditorFrame(w, h, supressGui);
                 nef.setReadWrite(true, true);
                 nef.validate();
-                nef.setVisible(true);
+                nef.setVisible(!supressGui);
             }
         }
     }

@@ -22,7 +22,8 @@ public class main implements Runnable/*extends JApplet*/ {
 
     public static final String TEST_FLAG = "-test";
     public static final String TEST_NOGUI_FLAG = "-testnogui";
-    public static final String NOGUI_FLAG = "-nogui";
+    public static final String NEUROML1_EXPORT_FLAG = "-exportnml1";
+    public static final String NEUROML2_EXPORT_FLAG = "-exportnml2";
     public static final String TEST_ONE_FLAG = "-testone";
     //public static final String NML_ONLY_FLAG = "-nml";
     
@@ -63,13 +64,18 @@ public class main implements Runnable/*extends JApplet*/ {
         
         if (myArgs.length==0){
             String usage= "\nError, missing SWC file containing morphology!\n\nUsage: \n    java -cp build cvapp.main swc_file [-test]"
-                    + "\n  or:\n    ./run.sh swc_file [-test]\n\nwhere swc_file is the file name or URL of the SWC morphology file\n";
+                    + "\n  or:\n    ./run.sh swc_file ["+TEST_FLAG+"|"+TEST_NOGUI_FLAG+"|"+NEUROML1_EXPORT_FLAG+"|"+NEUROML2_EXPORT_FLAG+"]\n\n"
+                    + "where swc_file is the file name or URL of the SWC morphology file\n";
             System.out.println(usage);
             System.exit(0);
             
         }
         
         String a = myArgs[0];
+        File baseDir = new File(".");
+        if ((new File(a)).exists()){
+            baseDir = (new File(a)).getParentFile();
+        }
         
         try {
             
@@ -81,7 +87,9 @@ public class main implements Runnable/*extends JApplet*/ {
             boolean supressGui = false;
             
             if (myArgs.length==2 && 
-                    (myArgs[1].equals(TEST_NOGUI_FLAG) || myArgs[1].equals(NOGUI_FLAG))){
+                    (myArgs[1].equals(TEST_NOGUI_FLAG) || 
+                     myArgs[1].equals(NEUROML1_EXPORT_FLAG) || 
+                     myArgs[1].equals(NEUROML2_EXPORT_FLAG))){
                 supressGui = true;
             }
             
@@ -112,8 +120,45 @@ public class main implements Runnable/*extends JApplet*/ {
                 //Thread.sleep(1000);
                 doTests(nef, fileName);
             }
+            else if (myArgs.length==2 && myArgs[1].equals(NEUROML1_EXPORT_FLAG)){
+                File rootFile = (new File(baseDir, fileName)).getAbsoluteFile();
+                
+                String nml1FileName = rootFile.getName()+".xml";
+                File nml1File = new File(rootFile.getParentFile(), nml1FileName);
+                
+                neuronEditorPanel nep = nef.getNeuronEditorPanel();
 
-            if (myArgs.length==2 && (myArgs[1].equals(TEST_FLAG) || (myArgs[1].equals(TEST_NOGUI_FLAG)))){
+                nep.writeStringToFile(nep.getCell().writeNeuroML_v1_8_1(), nml1File.getAbsolutePath());
+
+                System.out.println("Saved NeuroML representation of the file to: "+nml1File.getAbsolutePath()+": "+nml1File.exists());
+
+                File v1schemaFile = new File("Schemas/v1.8.1/Level3/NeuroML_Level3_v1.8.1.xsd");
+
+                validateXML(nml1File, v1schemaFile);
+                
+                System.exit(0);
+            }
+            else if (myArgs.length==2 && myArgs[1].equals(NEUROML2_EXPORT_FLAG)){
+                
+                File rootFile = (new File(baseDir, fileName)).getAbsoluteFile();
+                
+                String nml2FileName = rootFile.getName()+".cell.nml";
+                System.out.println(rootFile);
+                System.out.println(rootFile.getParentFile());
+                File nml2File = new File(rootFile.getParentFile(), nml2FileName);
+                
+                neuronEditorPanel nep = nef.getNeuronEditorPanel();
+
+                nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
+
+                System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
+
+
+                validateXML(nml2File, new File("Schemas/v2/NeuroML_v2beta3.xsd"));
+                
+                System.exit(0);
+            }
+            else if (myArgs.length==2 && (myArgs[1].equals(TEST_FLAG) || (myArgs[1].equals(TEST_NOGUI_FLAG)))){
                 //Thread.sleep(1000);
                 doTests(nef, fileName);
                 
@@ -258,7 +303,7 @@ public class main implements Runnable/*extends JApplet*/ {
 
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-        validateXMLWithURL(nml2File, "https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd");
+        validateXMLWithURL(nml2File, "Schemas/v2/NeuroML_v2beta3.xsd");
         
     }
 

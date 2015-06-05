@@ -1,1 +1,1 @@
-java -cp build cvapp.main %1
+java -cp build cvapp.main %1 %2 %3

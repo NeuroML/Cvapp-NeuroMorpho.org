@@ -7,4 +7,6 @@ jdk:
   
 script:
   - ant testnogui
+  - ./run.sh examples/l22_small.swc -exportnml1
+  - ./run.sh examples/l22_small.swc -exportnml2
 

@@ -123,7 +123,10 @@ public class main implements Runnable/*extends JApplet*/ {
             else if (myArgs.length==2 && myArgs[1].equals(NEUROML1_EXPORT_FLAG)){
                 File rootFile = (new File(baseDir, fileName)).getAbsoluteFile();
                 
-                String nml1FileName = rootFile.getName()+".xml";
+                String nml1FileName = rootFile.getName().endsWith(".swc") ? 
+                                         rootFile.getName().substring(0, rootFile.getName().length()-4)+".xml" : 
+                                         rootFile.getName()+".xml";
+                
                 File nml1File = new File(rootFile.getParentFile(), nml1FileName);
                 
                 neuronEditorPanel nep = nef.getNeuronEditorPanel();
@@ -141,8 +144,11 @@ public class main implements Runnable/*extends JApplet*/ {
             else if (myArgs.length==2 && myArgs[1].equals(NEUROML2_EXPORT_FLAG)){
                 
                 File rootFile = (new File(baseDir, fileName)).getAbsoluteFile();
+          
+                String nml2FileName = rootFile.getName().endsWith(".swc") ? 
+                                         rootFile.getName().substring(0, rootFile.getName().length()-4)+".cell.nml" : 
+                                         rootFile.getName()+".cell.nml";
                 
-                String nml2FileName = rootFile.getName()+".cell.nml";
                 System.out.println(rootFile);
                 System.out.println(rootFile.getParentFile());
                 File nml2File = new File(rootFile.getParentFile(), nml2FileName);

@@ -265,18 +265,8 @@ class neuromlWriter extends Object {
         } else if (version.isVersion2beta())
         {
             sbf.append(INDENT+INDENT+INDENT+"</morphology>\n\n");
-            sbf.append("<!--NOTE: TEMPORARILY adding default biophysical parameters to test visualisation of NML2 cells on OSB-->\n");
-            sbf.append("<biophysicalProperties id=\"biophys\">\n");
-            sbf.append("<membraneProperties>\n");
-            sbf.append("<channelDensity condDensity=\"0.02812149 mS_per_cm2\" id=\"pas_all\" ionChannel=\"pas\" ion=\"non_specific\" erev=\"-66.0 mV\"/>\n");
-            sbf.append("<spikeThresh value=\"0 mV\"/>\n");
-            sbf.append("<specificCapacitance value=\"1.57 uF_per_cm2\"/>\n");
-            sbf.append("<initMembPotential value=\"-60.0 mV\"/>\n");
-            sbf.append("</membraneProperties>\n");
-            sbf.append("<intracellularProperties>\n");
-            sbf.append("<resistivity value=\"0.3 kohm_cm\"/>\n");
-            sbf.append("</intracellularProperties>\n");
-            sbf.append("</biophysicalProperties>\n\n");
+            
+            sbf.append(INDENT+"<!-- No biophysical properties, as this cell was generated from an SWC morphology file -->\n\n");
 
             sbf.append(INDENT+"</cell>\n");
         }

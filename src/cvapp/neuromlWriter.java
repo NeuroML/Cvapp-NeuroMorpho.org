@@ -129,6 +129,9 @@ class neuromlWriter extends Object {
                 cellName = cellName.substring(0,cellName.length()-4);
             cellName = cellName.replace(".", "_");
             cellName = cellName.replace("-", "_");
+            if (Character.isDigit(cellName.charAt(0))) {
+                cellName = "Cell_"+cellName;
+            } 
         } catch (Exception e) {
             // stick with original name
         }

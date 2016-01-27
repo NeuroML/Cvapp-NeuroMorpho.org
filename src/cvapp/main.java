@@ -152,17 +152,19 @@ public class main implements Runnable/*extends JApplet*/ {
                                          rootFile.getName().substring(0, rootFile.getName().length()-4)+".cell.nml" : 
                                          rootFile.getName()+".cell.nml";
                 
-                System.out.println(rootFile);
-                System.out.println(rootFile.getParentFile());
+                if (Character.isDigit(nml2FileName.charAt(0))) {
+                    nml2FileName = "Cell_"+nml2FileName;
+                } 
+                
                 File nml2File = new File(rootFile.getParentFile(), nml2FileName);
                 
                 neuronEditorPanel nep = nef.getNeuronEditorPanel();
 
                 nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
 
-                System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
+                System.out.println("Saved the NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-                validateXML(nml2File, new File(root, "Schemas/v2/NeuroML_v2beta3.xsd"));
+                validateXML(nml2File, new File(root, "Schemas/v2/NeuroML_v2beta4.xsd"));
                 
                 System.exit(0);
             }
@@ -304,14 +306,18 @@ public class main implements Runnable/*extends JApplet*/ {
 
         validateXML(nml1File, v1schemaFile);
 
-        String nml2FileName = rootFileName+".nml";
+        String nml2FileName = rootFileName+".cell.nml";
+        
+        if (Character.isDigit(nml2FileName.charAt(0))) {
+            nml2FileName = "Cell_"+nml2FileName;
+        } 
         File nml2File = new File(tempDir, nml2FileName);
 
         nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
 
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-        validateXMLWithURL(nml2File, "Schemas/v2/NeuroML_v2beta3.xsd");
+        validateXMLWithURL(nml2File, "Schemas/v2/NeuroML_v2beta4.xsd");
         
     }
 

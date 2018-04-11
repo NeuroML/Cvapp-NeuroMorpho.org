@@ -83,7 +83,11 @@ public class main implements Runnable/*extends JApplet*/ {
             File root = new File(main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile();
         
             if (!a.startsWith("http://")&&!a.startsWith("file://")){
-                a = "file://"+(new File(a)).getCanonicalPath();
+                
+                if (System.getProperty("os.name").toLowerCase().indexOf("indows") > 0)
+                    a = "file:///"+(new File(a)).getCanonicalPath();
+                else 
+                    a = "file://"+(new File(a)).getCanonicalPath();
             }
                    
             

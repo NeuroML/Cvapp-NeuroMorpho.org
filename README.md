@@ -17,6 +17,11 @@ in the examples folder:
 
     ./make.sh 
     ./run.sh examples/dCH-cobalt.CNG.swc
+
+or on Windows:
+
+    make.bat
+    run.bat examples\dCH-cobalt.CNG.swc
   
 Contact ruchisparekh@gmail.com and p.gleeson@ucl.ac.uk for more details.
 

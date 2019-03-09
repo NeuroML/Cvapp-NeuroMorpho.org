@@ -4,7 +4,7 @@ This is a version of [Cvapp](http://www.compneuro.org/CDROM/docs/cvapp.html), or
 which has been customised as a 3D viewer for http://neuromorpho.org with updated export functionality for NEURON, 
 GENESIS & NeuroML versions 1 & 2.
 
-![Cvapp Screenshot](https://github.com/JustasB/Cvapp-NeuroMorpho.org/raw/master/examples/Screenshot.JPG)
+![Cvapp Screenshot](https://github.com/pgleeson/Cvapp-NeuroMorpho.org/raw/master/examples/Screenshot.JPG)
 
 
 This application is available to use (through Java Webstart) on NeuroMorpho.org. 

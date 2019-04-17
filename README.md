@@ -1,7 +1,7 @@
 ### Cvapp for NeuroMorpho.org
 
 This is a version of [Cvapp](http://www.compneuro.org/CDROM/docs/cvapp.html), originally developed by Robert Cannon,
-which has been customised as a 3D viewer for http://neuromorpho.org with updated export functionality for NEURON, 
+which has been customised as a 3D viewer for [**SWC files**](#swc-format-documentation) for http://NeuroMorpho.Org with updated export functionality for NEURON, 
 GENESIS & NeuroML versions 1 & 2.
 
 ![Cvapp Screenshot](https://github.com/pgleeson/Cvapp-NeuroMorpho.org/raw/master/examples/Screenshot.JPG)
@@ -27,5 +27,26 @@ or on Windows:
     run.bat examples\dCH-cobalt.CNG.swc
   
 Contact ruchisparekh@gmail.com and p.gleeson@ucl.ac.uk for more details.
+
+### Other SWC related links
+
+#### SWC format documentation
+
+See *An on-line archive of reconstructed hippocampal neurons, [Cannon et al. 1998](https://www.sciencedirect.com/science/article/pii/S0165027098000910)*. 
+See also "What is SWC format?" at http://neuromorpho.org/myfaq.jsp.  
+
+#### Using SWC viewer on NeuroMorpho.Org
+
+A short tutorial on using the SWC viewer on NeuroMorpho.Org and exporting to NeuroML 
+can be found [here](https://github.com/NeuralEnsemble/NeuroinformaticsTutorial/blob/master/Exercises/Exercise1_NeuroMorpho_to_OSB.md).
+
+#### SWC to NeuroML using neuroConstruct
+
+SWC can also be [loaded in to neuroConstruct](http://www.neuroconstruct.org/docs/import.html#Cvapp+%28SWC+files%29), 
+visualized, edited, passive electrical properties and ion channel conductance densities added and the cell files exported to NeuroML 1 & 2.
+
+#### NeuroML to SWC
+
+A script for conversion of NeuroML 2 cells to SWC can be found here: https://github.com/NeuroML/pyNeuroML/tree/master/pyneuroml/swc.
 
 [![Build Status](https://travis-ci.org/pgleeson/Cvapp-NeuroMorpho.org.svg?branch=master)](https://travis-ci.org/pgleeson/Cvapp-NeuroMorpho.org)

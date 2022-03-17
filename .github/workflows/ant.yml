@@ -12,14 +12,21 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '8', '11', '16', '17' ]
+        runs-on: [ubuntu-latest, macos-11, windows-latest]
 
+    name: Test on Java ${{ matrix.Java }} on ${{ matrix.runs-on }}
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK ${{ matrix.Java }}
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
-        distribution: 'temurin'
+        java-version: ${{ matrix.Java }}
+        distribution: 'adopt'
+        
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml

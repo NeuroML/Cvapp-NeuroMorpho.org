@@ -28,6 +28,10 @@ jobs:
         java-version: ${{ matrix.Java }}
         distribution: 'adopt'
 
-
     - name: Test with Ant
       run: ant testnogui
+
+    - name: Run some examples
+      run: |
+         ./run.sh examples/l22_small.swc -exportnml1
+         ./run.sh examples/l22_small.swc -exportnml2

@@ -4,17 +4,17 @@
     <description>Cvapp converted for use on NeuroMorpho.Org</description>
 
 
-    <target name="init" description="Initialises project, makes build dir"> 
-            
+    <target name="init" description="Initialises project, makes build dir">
+
       <property name="main.jar" value="cvapp.jar"/>
       <property name="src.dir" value="src"/>
       <property name="test.dir" value="test"/>
       <property name="build.dir" value="build"/>
-      
+
       <property name="temp.dir" value="temp/"/>
-      
+
       <property name="main.class" value="cvapp.main"/>
-	
+
 
       <path id="run.class.path">
 	      <pathelement location="${main.jar}"/>
@@ -27,7 +27,7 @@
       <echo>This is initialising CvappNMO</echo>
 
       <mkdir dir="${build.dir}"/>
-      
+
     </target>
 
 
@@ -36,14 +36,14 @@
             description="Compiles the source code">
 
         <echo>Compiling CvappNMO code</echo>
-        
+
         <javac srcdir="${src.dir}"
                destdir="${build.dir}"
                debug="true"
                optimize="${optimize}"
                compiler="modern"
-               source="1.5"
-               target="1.5"
+               source="1.7"
+               target="1.7"
                includeantruntime="false">
              <classpath refid="run.class.path"/>
         </javac>
@@ -79,8 +79,8 @@
             </manifest>
         </jar>
     </target>
-   
-    
+
+
 
     <target name="jartests" depends="compiletests"
             description="Creates main Jar file including test classes">
@@ -107,7 +107,7 @@
             <arg value="examples/dCH-cobalt.CNG.swc"/>
         </java>
     </target>
-    
+
 
     <target name="test" depends="clean, jar"
             description="Tests the main code">
@@ -194,6 +194,6 @@
 
     </target>
 
-     
-	
+
+
 </project>

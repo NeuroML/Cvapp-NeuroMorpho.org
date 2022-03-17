@@ -27,6 +27,7 @@ jobs:
       with:
         java-version: ${{ matrix.Java }}
         distribution: 'adopt'
-        
-    - name: Build with Ant
-      run: ant -noinput -buildfile build.xml
+
+
+    - name: Test with Ant
+      run: ant testnogui

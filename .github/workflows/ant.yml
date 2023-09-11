@@ -21,7 +21,7 @@ jobs:
 
     name: Test on Java ${{ matrix.Java }} on ${{ matrix.runs-on }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK ${{ matrix.Java }}
       uses: actions/setup-java@v2
       with:

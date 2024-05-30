@@ -42,8 +42,8 @@
                debug="true"
                optimize="${optimize}"
                compiler="modern"
-               source="1.7"
-               target="1.7"
+               source="1.8"
+               target="1.8"
                includeantruntime="false">
              <classpath refid="run.class.path"/>
         </javac>

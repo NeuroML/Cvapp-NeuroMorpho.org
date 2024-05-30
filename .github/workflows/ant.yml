@@ -16,8 +16,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '8', '11', '16', '17', '19' ]
+        java: [ '8', '11', '16', '17', '19', '21' ]
         runs-on: [ubuntu-latest, macos-12, windows-latest, macos-latest]
+        exclude:
+          - runs-on: macos-latest
+            java: "8"
+          - runs-on: macos-latest
+            java: "16"
 
     name: Test on Java ${{ matrix.Java }} on ${{ matrix.runs-on }}
     steps:

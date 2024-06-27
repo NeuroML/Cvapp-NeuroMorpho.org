@@ -34,7 +34,7 @@ jobs:
         distribution: 'adopt'
 
     - name: Build with Ant
-      run: ant build
+      run: ant jar
 
     - name: Run some examples
       run: |

@@ -43,8 +43,8 @@ jobs:
 
     - name: Test with Ant
       uses: coactions/setup-xvfb@v1
-      run: |
-          ant testnogui
+      with:
+          run: ant testnogui
 
     - name: Validate generated NeuroML 2 files
       run: |

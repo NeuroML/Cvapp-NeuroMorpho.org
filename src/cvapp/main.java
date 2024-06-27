@@ -198,7 +198,7 @@ public class main implements Runnable/*extends JApplet*/ {
                         sdata = fileString.readStringArrayFromFile(f.getAbsolutePath());
                         nef.setTitle("3DViewer (Modified from CVAPP with permission)-Neuron: " + f.getName());
                         nef.loadFile(sdata, f.getParent(), f.getName());
-                        doTests(nef, f.getAbsolutePath(), null);
+                        doTests(nef, f.getAbsolutePath(), "spherSomaSwc/NeuroML2");
                     }
                 }
                 exampleDir = new File("caseExamples");

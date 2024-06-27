@@ -5,3 +5,9 @@ nbproject/private
 cvapp.jar
 temp
 build
+/spherSomaSwc/NeuroML2/*.mod
+*_nrn.py
+/spherSomaSwc/NeuroML2/*.hoc
+arm64
+/spherSomaSwc/NeuroML2/*.dat
+/spherSomaSwc/NeuroML2/simulator.props

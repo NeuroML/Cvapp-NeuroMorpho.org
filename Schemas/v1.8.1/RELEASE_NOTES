@@ -65,7 +65,7 @@ MorphML
 ChannelML:
 - Added new expamples of a proposed change to ChannelML format based on Robert Cannon's suggestions. The gate
   element has been restructured to list states in the gating complex, and the transitions between them. The
-  HTML mappings, and the NEURON/GENESIS XSD fiels have been updated to handle the new format (beta stage of testing!!)
+  HTML mappings, and the NEURON/GENESIS XSD files have been updated to handle the new format (beta stage of testing!!)
 
 NetworkML:
 - Made size a required attribute in instances, added optional size attribute to connections

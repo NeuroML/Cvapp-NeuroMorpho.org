@@ -12,6 +12,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+
 /*
 "main.java" is the main entry point for stripped down cvapp.
 SWC files present on the website are used as input to program. Hence the parameter accepted by the code is SWC url.
@@ -26,6 +27,8 @@ public class main implements Runnable/*extends JApplet*/ {
     public static final String NEUROML2_EXPORT_FLAG = "-exportnml2";
     public static final String TEST_ONE_FLAG = "-testone";
     //public static final String NML_ONLY_FLAG = "-nml";
+
+    public static final String LATEST_NEUROML_V2_SCHEMA = "Schemas/v2/NeuroML_v2.3.1.xsd";
     
     private String[] myArgs = null;
     
@@ -164,11 +167,11 @@ public class main implements Runnable/*extends JApplet*/ {
                 
                 neuronEditorPanel nep = nef.getNeuronEditorPanel();
 
-                nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
+                nep.writeStringToFile(nep.getCell().writeNeuroML_v2(), nml2File.getAbsolutePath());
 
                 System.out.println("Saved the NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-                validateXML(nml2File, new File(root, "Schemas/v2/NeuroML_v2beta4.xsd"));
+                validateXML(nml2File, new File(root, LATEST_NEUROML_V2_SCHEMA));
                 
                 System.exit(0);
             }
@@ -318,11 +321,11 @@ public class main implements Runnable/*extends JApplet*/ {
         } 
         File nml2File = new File(tempDir, nml2FileName);
 
-        nep.writeStringToFile(nep.getCell().writeNeuroML_v2beta(), nml2File.getAbsolutePath());
+        nep.writeStringToFile(nep.getCell().writeNeuroML_v2(), nml2File.getAbsolutePath());
 
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
 
-        validateXMLWithURL(nml2File, "Schemas/v2/NeuroML_v2beta4.xsd");
+        validateXMLWithURL(nml2File, LATEST_NEUROML_V2_SCHEMA);
         
     }
 

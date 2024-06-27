@@ -664,13 +664,13 @@ class neulucData extends Object {
         return nw.nmlString(neuromlWriter.NeuroMLVersion.NEUROML_VERSION_1_8_1);
     }
 
-    public String writeNeuroML_v2beta() {
+    public String writeNeuroML_v2() {
         unwrite();
         //      rootpoint = maxRadiusPoint();
         // above also sets maxType to the maximal nlcode;
 
         neuromlWriter nw = new neuromlWriter(points, sectionTypes, sourceFileName);
-        return nw.nmlString(neuromlWriter.NeuroMLVersion.NEUROML_VERSION_2_beta);
+        return nw.nmlString(neuromlWriter.NeuroMLVersion.NEUROML_VERSION_2_3_1);
     }
 
     public String GENESISwriteHR() {

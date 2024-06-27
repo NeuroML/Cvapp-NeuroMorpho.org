@@ -33,10 +33,24 @@ jobs:
         java-version: ${{ matrix.Java }}
         distribution: 'adopt'
 
-    - name: Test with Ant
-      run: ant testnogui
+    - name: Build with Ant
+      run: ant jar
 
-    - name: Run some examples
+    - name: Run some examples & test with ant (non Win)
+      if: ${{ matrix.runs-on != 'windows-latest' }}
+      uses: coactions/setup-xvfb@v1
+      with:
+          run: |
+            ./run.sh examples/l22_small.swc -exportnml1
+            ./run.sh examples/l22_small.swc -exportnml2
+            ant testnogui
+
+    - name: Run some examples & test with ant (Windows)
+      if: ${{ matrix.runs-on == 'windows-latest' }}
       run: |
-         ./run.sh examples/l22_small.swc -exportnml1
-         ./run.sh examples/l22_small.swc -exportnml2
+            ./run.sh examples/l22_small.swc -exportnml1
+            ./run.sh examples/l22_small.swc -exportnml2
+
+            # Test with 
+            ant testnogui
+

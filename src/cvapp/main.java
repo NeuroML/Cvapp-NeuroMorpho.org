@@ -67,7 +67,7 @@ public class main implements Runnable/*extends JApplet*/ {
                     + "\n  or:\n    ./run.sh swc_file ["+TEST_FLAG+"|"+TEST_NOGUI_FLAG+"|"+NEUROML1_EXPORT_FLAG+"|"+NEUROML2_EXPORT_FLAG+"]\n\n"
                     + "where swc_file is the file name or URL of the SWC morphology file\n";
             System.out.println(usage);
-            System.exit(0);
+            System.exit(1);
             
         }
         
@@ -217,6 +217,7 @@ public class main implements Runnable/*extends JApplet*/ {
         } catch (Exception exception) {
             System.err.println("Error while handling SWC file ("+a+")");
             exception.printStackTrace();
+            System.exit(1);
         }
     }
 

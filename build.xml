@@ -58,8 +58,8 @@
                debug="true"
                optimize="${optimize}"
                compiler="modern"
-               source="1.5"
-               target="1.5"
+               source="1.8"
+               target="1.8"
                includeantruntime="false">
       <classpath refid="test.class.path"/>
 

@@ -76,13 +76,21 @@ class neuromlWriter extends Object {
             @Override
             public String toString()
             {
-                return "2beta";
+                return "2beta4";
+            }
+        },
+        NEUROML_VERSION_2_3_1
+        {
+            @Override
+            public String toString()
+            {
+                return "2.3.1";
             }
         };
 
         public boolean isVersion2()
         {
-            return this.toString().startsWith("2");
+            return !isVersion1();
         }
 
         public boolean isVersion2beta()
@@ -178,7 +186,7 @@ class neuromlWriter extends Object {
         if (version.isVersion1()) {
             segmentContent.append(INDENT+INDENT+INDENT+"<segments xmlns=\"http://morphml.org/morphml/schema\">\n\n");
             groupContent.append("\n"+INDENT+INDENT+INDENT+"<cables xmlns=\"http://morphml.org/morphml/schema\">\n\n");
-        } else if (version.isVersion2beta()) {
+        } else if (version.isVersion2()) {
             segmentContent.append(INDENT+INDENT+INDENT+"<morphology id=\"morphology_"+cellName+"\">\n\n");
         }
 
@@ -199,11 +207,11 @@ class neuromlWriter extends Object {
                 INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
                 INDENT+"xsi:schemaLocation=\"http://morphml.org/neuroml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level1/NeuroML_Level1_v1.8.1.xsd\"\n"+
                 INDENT+"length_units=\"micrometer\">\n\n");
-        } else if (version.isVersion2beta()) {
+        } else if (version.isVersion2()) {
 
             sbf.append("<neuroml xmlns=\"http://www.neuroml.org/schema/neuroml2\"\n"+
                 INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
-                INDENT+"xsi:schemaLocation=\"http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd\"\n"+
+                INDENT+"xsi:schemaLocation=\"http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v"+version+".xsd\"\n"+
                 INDENT+"id=\""+cellName+"\">\n\n");
         }
 
@@ -214,7 +222,7 @@ class neuromlWriter extends Object {
             sbf.append(INDENT+INDENT+"<cell name=\""+cellName+"\">\n");
             metaPrefix = "meta:";
 
-        } else if (version.isVersion2beta()){
+        } else if (version.isVersion2()){
             
             sbf.append(INDENT+"<cell id=\""+cellName+"\">\n");
         }
@@ -227,7 +235,7 @@ class neuromlWriter extends Object {
         if (version.isVersion1()){
             segmentContent.append(INDENT+INDENT+INDENT+"</segments>\n");
             groupContent.append(INDENT+INDENT+INDENT+"</cables>\n\n");
-        } else if (version.isVersion2beta()){
+        } else if (version.isVersion2()){
             for(String key: segmentGroups.keySet())
             {
                 ArrayList<String> members = segmentGroups.get(key);
@@ -265,7 +273,7 @@ class neuromlWriter extends Object {
         {
             sbf.append(INDENT+INDENT+"</cell>\n");
             sbf.append(INDENT+"</cells>\n");
-        } else if (version.isVersion2beta())
+        } else if (version.isVersion2())
         {
             sbf.append(INDENT+INDENT+INDENT+"</morphology>\n\n");
             
@@ -486,7 +494,7 @@ class neuromlWriter extends Object {
 
             segmentContent.append(INDENT+INDENT+INDENT+INDENT+"</segment>  "+"\n\n");
 
-            if (version.isVersion2beta()) {
+            if (version.isVersion2()) {
                 String cableName = CABLE_PREFIX_V2+cableId;
                 if (!segmentGroups.containsKey(cableName)) {
                     segmentGroups.put(cableName, new ArrayList<String>());
@@ -509,7 +517,7 @@ class neuromlWriter extends Object {
                 }
 
                 groupContent.append(INDENT+INDENT+INDENT+INDENT+"</cable>\n\n");
-            } else if (version.isVersion2beta()) {
+            } else if (version.isVersion2()) {
                 
 
                 for (String group: getGroupsForType(thisPoint)){

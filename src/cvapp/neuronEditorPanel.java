@@ -76,7 +76,7 @@ class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
     protected final static String SAVE_GENESIS = "GENESIS";
     protected final static String SAVE_NEUROML_v1 = "NeuroML v1.8.1";
     protected final static String SAVE_NEUROML_v2alpha = "NeuroML v2alpha";
-    protected final static String SAVE_NEUROML_v2beta = "NeuroML v2beta";
+    protected final static String SAVE_NEUROML_v2 = "NeuroML v2";
     protected final static String CENTER = "Center";
             
 
@@ -577,12 +577,12 @@ class neuronEditorPanel extends JPanel implements ActionListener, ItemListener {
 			} else {
 				System.out.println("file writing not allowed ");
 			}
-                } else if (sarg.startsWith(neuronEditorPanel.SAVE_NEUROML_v2beta)) {
+                } else if (sarg.startsWith(neuronEditorPanel.SAVE_NEUROML_v2)) {
 			if (canWriteFiles) {
 				File f = fileString.getFileToSave(this, fdir, "Select NeuroML file");
 				if (f != null) {
 					blockingMessageOn("formatting as NeuroML");
-					writeStringToFile(cell.writeNeuroML_v2beta(), f.getAbsolutePath());
+					writeStringToFile(cell.writeNeuroML_v2(), f.getAbsolutePath());
 				}
 
 			} else {
@@ -702,7 +702,7 @@ class ModifiedOptionBar extends JPanel implements ItemListener, ActionListener {
         options.addItem(neuronEditorPanel.SAVE_NEURON);
         options.addItem(neuronEditorPanel.SAVE_GENESIS);
         options.addItem(neuronEditorPanel.SAVE_NEUROML_v1);
-        options.addItem(neuronEditorPanel.SAVE_NEUROML_v2beta);
+        options.addItem(neuronEditorPanel.SAVE_NEUROML_v2);
         
 		add(saveLabel);
 		add(options);
@@ -761,8 +761,8 @@ class ModifiedOptionBar extends JPanel implements ItemListener, ActionListener {
 			neupan.processNameEvent("save as Genesis - hierarchical");
 		} else if (sarg.equals(neuronEditorPanel.SAVE_NEUROML_v1)) {
 			neupan.processNameEvent(neuronEditorPanel.SAVE_NEUROML_v1);
-		} else if (sarg.equals(neuronEditorPanel.SAVE_NEUROML_v2beta)) {
-			neupan.processNameEvent(neuronEditorPanel.SAVE_NEUROML_v2beta);
+		} else if (sarg.equals(neuronEditorPanel.SAVE_NEUROML_v2)) {
+			neupan.processNameEvent(neuronEditorPanel.SAVE_NEUROML_v2);
 		} else if (sarg.equals("Center")) {
 			neupan.neucan.find();
 		} else {

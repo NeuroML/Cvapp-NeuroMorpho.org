@@ -1,0 +1,8 @@
+# Script for running automated tests on OSB, see https://github.com/OpenSourceBrain/osb-model-validation 
+
+target: LEMS_pyrfull_out.xml
+engine: jNeuroML_EDEN
+
+
+
+        

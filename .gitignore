@@ -11,3 +11,6 @@ build
 arm64
 /spherSomaSwc/NeuroML2/*.dat
 /spherSomaSwc/NeuroML2/simulator.props
+*_code.gen.c
+*_code.gen.so
+*_eden.py

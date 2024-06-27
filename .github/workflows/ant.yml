@@ -42,6 +42,7 @@ jobs:
          ./run.sh examples/l22_small.swc -exportnml2
 
     - name: Test with Ant
+      uses: coactions/setup-xvfb@v1
       run: |
           ant testnogui
 

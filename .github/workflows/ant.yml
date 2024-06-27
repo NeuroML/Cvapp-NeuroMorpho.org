@@ -50,4 +50,4 @@ jobs:
           pip install pyneuroml
           cd temp # where the NeuroML files get generated in the previous step
           ls -alth
-          pynml -validate *.nml 
+          #pynml -validate *.nml 

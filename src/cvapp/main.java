@@ -324,13 +324,18 @@ public class main implements Runnable/*extends JApplet*/ {
         if (Character.isDigit(nml2FileName.charAt(0))) {
             nml2FileName = "Cell_"+nml2FileName;
         } 
+
+
         File nml2File = new File(nmlExportDir, nml2FileName);
-
         nep.writeStringToFile(nep.getCell().writeNeuroML_v2(), nml2File.getAbsolutePath());
-
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
-
         validateXMLWithURL(nml2File, LATEST_NEUROML_V2_SCHEMA);
+
+        nml2FileName = nml2FileName.replace(".cell","_morphOnly.cell");
+        File nml2FileMorph = new File(nmlExportDir, nml2FileName);
+        nep.writeStringToFile(nep.getCell().writeNeuroML_v2_morphologyOnly(), nml2FileMorph.getAbsolutePath());
+        System.out.println("Saved NeuroML representation of the file to: "+nml2FileMorph.getAbsolutePath()+": "+nml2FileMorph.exists());
+        validateXMLWithURL(nml2FileMorph, LATEST_NEUROML_V2_SCHEMA);
         
     }
 

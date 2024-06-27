@@ -123,9 +123,13 @@ class neuromlWriter extends Object {
         form.setGroupingUsed(false);
     }
 
-    public String nmlString(NeuroMLVersion version) {
+    public String nmlString(NeuroMLVersion version, boolean morphologyOnly) {
         if (points.size() < 2 || sectionTypes.length < 2 || !sectionTypes[1].equals("soma")) {
-            System.out.println("error: null data or section types in hocWrite");
+            System.out.println("Error: null data or section types in hocWrite");
+            return "";
+        }
+        if (version.isVersion1() && morphologyOnly) {
+            System.out.println("Error: morphologyOnly option only supported by version 2");
             return "";
         }
 
@@ -209,10 +213,13 @@ class neuromlWriter extends Object {
                 INDENT+"length_units=\"micrometer\">\n\n");
         } else if (version.isVersion2()) {
 
+            String nmlId = cellName;
+            if (morphologyOnly)
+                nmlId += "_morphology";
             sbf.append("<neuroml xmlns=\"http://www.neuroml.org/schema/neuroml2\"\n"+
                 INDENT+"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"+
                 INDENT+"xsi:schemaLocation=\"http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v"+version+".xsd\"\n"+
-                INDENT+"id=\""+cellName+"\">\n\n");
+                INDENT+"id=\""+nmlId+"\">\n\n");
         }
 
         String metaPrefix="";
@@ -222,7 +229,7 @@ class neuromlWriter extends Object {
             sbf.append(INDENT+INDENT+"<cell name=\""+cellName+"\">\n");
             metaPrefix = "meta:";
 
-        } else if (version.isVersion2()){
+        } else if (version.isVersion2() && !morphologyOnly){
             
             sbf.append(INDENT+"<cell id=\""+cellName+"\">\n");
         }
@@ -277,9 +284,12 @@ class neuromlWriter extends Object {
         {
             sbf.append(INDENT+INDENT+INDENT+"</morphology>\n\n");
             
-            sbf.append(INDENT+"<!-- No biophysical properties, as this cell was generated from an SWC morphology file -->\n\n");
+            if (!morphologyOnly)
+            {
+                sbf.append(INDENT+"<!-- No biophysical properties, as this cell was generated from an SWC morphology file -->\n\n");
 
-            sbf.append(INDENT+"</cell>\n");
+                sbf.append(INDENT+"</cell>\n");
+            }
         }
         
         sbf.append("</neuroml>\n");

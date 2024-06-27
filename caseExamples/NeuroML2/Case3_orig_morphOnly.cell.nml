@@ -1,0 +1,148 @@
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2.3.1.xsd"
+  id="Case3_orig_morphology">
+
+      <notes>
+        Neuronal morphology exported in NeuroML v2.3.1 from CVapp (NeuroMorpho.org version)
+        Original file: Case3_orig.swc </notes>
+
+      <morphology id="morphology_Case3_orig">
+
+        <!-- First point is of a multi point soma => not spherical! -->
+
+        <segment id="0" name="Seg_0"> <!-- "Cable" is 0-->
+          
+          <!-- Cylindrical soma... -->
+          <proximal x="-10" y="10" z="0" diameter="0.2"/>
+          <distal x="10" y="10" z="0" diameter="0.2"/>
+        </segment>  
+
+        <segment id="1" name="Seg_1"> <!-- "Cable" is 0-->
+          <parent segment="0"/>
+          <distal x="10" y="-10" z="0" diameter="0.2"/>
+        </segment>  
+
+        <segment id="2" name="Seg_2"> <!-- "Cable" is 0-->
+          <parent segment="1"/>
+          <distal x="-10" y="-10" z="0" diameter="0.2"/>
+        </segment>  
+
+        <segment id="3" name="Seg_3"> <!-- "Cable" is 0-->
+          <parent segment="2"/>
+          <distal x="-10" y="10" z="0" diameter="0.2"/>
+        </segment>  
+
+        <segment id="4" name="Seg_4"> <!-- "Cable" is 0-->
+          <parent segment="3"/>
+          <distal x="-10" y="10" z="10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="5" name="Seg_5"> <!-- "Cable" is 0-->
+          <parent segment="4"/>
+          <distal x="10" y="10" z="10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="6" name="Seg_6"> <!-- "Cable" is 0-->
+          <parent segment="5"/>
+          <distal x="10" y="-10" z="10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="7" name="Seg_7"> <!-- "Cable" is 0-->
+          <parent segment="6"/>
+          <distal x="-10" y="-10" z="10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="8" name="Seg_8"> <!-- "Cable" is 0-->
+          <parent segment="7"/>
+          <distal x="-10" y="10" z="10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="9" name="Seg_9"> <!-- "Cable" is 0-->
+          <parent segment="8"/>
+          <distal x="-10" y="10" z="-10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="10" name="Seg_10"> <!-- "Cable" is 0-->
+          <parent segment="9"/>
+          <distal x="10" y="10" z="-10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="11" name="Seg_11"> <!-- "Cable" is 0-->
+          <parent segment="10"/>
+          <distal x="10" y="-10" z="-10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="12" name="Seg_12"> <!-- "Cable" is 0-->
+          <parent segment="11"/>
+          <distal x="-10" y="-10" z="-10" diameter="0.2"/>
+        </segment>  
+
+        <segment id="13" name="Seg_13"> <!-- "Cable" is 0-->
+          <parent segment="12"/>
+          <distal x="-10" y="10" z="-10" diameter="0.2"/>
+        </segment>  
+
+        <!-- Parent point is on soma! Not creating 'real' segment -->
+
+        <segment id="14" name="Seg_14"> <!-- "Cable" is 1-->
+          <parent segment="0"/>
+          <proximal x="10" y="0" z="0" diameter="4"/>
+          <distal x="20" y="0" z="0" diameter="4"/>
+        </segment>  
+
+        <segment id="15" name="Seg_15"> <!-- "Cable" is 1-->
+          <parent segment="14"/>
+          <distal x="30" y="0" z="0" diameter="4"/>
+        </segment>  
+
+        <segmentGroup id="Cable_0" >
+          <member segment="0"/>
+          <member segment="1"/>
+          <member segment="2"/>
+          <member segment="3"/>
+          <member segment="4"/>
+          <member segment="5"/>
+          <member segment="6"/>
+          <member segment="7"/>
+          <member segment="8"/>
+          <member segment="9"/>
+          <member segment="10"/>
+          <member segment="11"/>
+          <member segment="12"/>
+          <member segment="13"/>
+        </segmentGroup>
+
+        <segmentGroup id="Cable_1" >
+          <member segment="14"/>
+          <member segment="15"/>
+        </segmentGroup>
+
+        <segmentGroup id="dendrite_group" >
+          <include segmentGroup="Cable_1"/>
+        </segmentGroup>
+
+        <segmentGroup id="soma_group" >
+          <include segmentGroup="Cable_0"/>
+        </segmentGroup>
+
+        <segmentGroup id="color_green" >
+          <include segmentGroup="Cable_1"/>
+        </segmentGroup>
+
+        <segmentGroup id="basal_dendrite" >
+          <include segmentGroup="Cable_1"/>
+        </segmentGroup>
+
+        <segmentGroup id="all" >
+          <include segmentGroup="Cable_0"/>
+          <include segmentGroup="Cable_1"/>
+        </segmentGroup>
+
+        <segmentGroup id="color_white" >
+          <include segmentGroup="Cable_0"/>
+        </segmentGroup>
+
+      </morphology>
+
+</neuroml>

@@ -43,7 +43,7 @@ jobs:
           run: |
             ./run.sh examples/l22_small.swc -exportnml1
             ./run.sh examples/l22_small.swc -exportnml2
-            ant testnogui # Test with ant
+            ant testnogui
 
     - name: Run some examples & test with ant (Windows)
       if: ${{ matrix.runs-on == 'windows-latest' }}

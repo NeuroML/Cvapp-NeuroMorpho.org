@@ -128,7 +128,7 @@ public class main implements Runnable/*extends JApplet*/ {
 
             if (myArgs.length==2 && myArgs[1].equals(TEST_ONE_FLAG)){
                 //Thread.sleep(1000);
-                doTests(nef, fileName);
+                doTests(nef, fileName, null);
             }
             else if (myArgs.length==2 && myArgs[1].equals(NEUROML1_EXPORT_FLAG)){
                 File rootFile = (new File(baseDir, fileName)).getAbsoluteFile();
@@ -177,7 +177,7 @@ public class main implements Runnable/*extends JApplet*/ {
             }
             else if (myArgs.length==2 && (myArgs[1].equals(TEST_FLAG) || (myArgs[1].equals(TEST_NOGUI_FLAG)))){
                 //Thread.sleep(1000);
-                doTests(nef, fileName);
+                doTests(nef, fileName, null);
                 
                 File exampleDir = new File("twoCylSwc");
                 for (File f: exampleDir.listFiles())
@@ -187,7 +187,7 @@ public class main implements Runnable/*extends JApplet*/ {
                         sdata = fileString.readStringArrayFromFile(f.getAbsolutePath());
                         nef.setTitle("3DViewer (Modified from CVAPP with permission)-Neuron: " + f.getName());
                         nef.loadFile(sdata, f.getParent(), f.getName());
-                        doTests(nef, f.getAbsolutePath());
+                        doTests(nef, f.getAbsolutePath(), null);
                     }
                 }
                 exampleDir = new File("spherSomaSwc");
@@ -198,7 +198,7 @@ public class main implements Runnable/*extends JApplet*/ {
                         sdata = fileString.readStringArrayFromFile(f.getAbsolutePath());
                         nef.setTitle("3DViewer (Modified from CVAPP with permission)-Neuron: " + f.getName());
                         nef.loadFile(sdata, f.getParent(), f.getName());
-                        doTests(nef, f.getAbsolutePath());
+                        doTests(nef, f.getAbsolutePath(), "spherSomaSwc/NeuroML2");
                     }
                 }
                 exampleDir = new File("caseExamples");
@@ -209,7 +209,7 @@ public class main implements Runnable/*extends JApplet*/ {
                         sdata = fileString.readStringArrayFromFile(f.getAbsolutePath());
                         nef.setTitle("3DViewer (Modified from CVAPP with permission)-Neuron: " + f.getName());
                         nef.loadFile(sdata, f.getParent(), f.getName());
-                        doTests(nef, f.getAbsolutePath());
+                        doTests(nef, f.getAbsolutePath(), "caseExamples/NeuroML2");
                     }
                 }
                 
@@ -227,10 +227,15 @@ public class main implements Runnable/*extends JApplet*/ {
     /*
      * Carries out a number of tests, generates NEURON, GENESIS and NeuroML code etc.
      */
-    private static void doTests(neuronEditorFrame nef, String fileName){
+    private static void doTests(neuronEditorFrame nef, String fileName, String nmlExportDirname){
         System.out.println("Testing Cvapp/NeuroMorpho.Org by generating NEURON, GENESIS and NeuroML files for "+fileName);
         File tempDir = new File("temp");
         if (!tempDir.exists()) tempDir.mkdir();
+        File nmlExportDir;
+        if (nmlExportDirname==null)
+            nmlExportDir = tempDir;
+        else
+            nmlExportDir = new File(nmlExportDirname);
 
         neuronEditorPanel nep = nef.getNeuronEditorPanel();
 
@@ -319,13 +324,18 @@ public class main implements Runnable/*extends JApplet*/ {
         if (Character.isDigit(nml2FileName.charAt(0))) {
             nml2FileName = "Cell_"+nml2FileName;
         } 
-        File nml2File = new File(tempDir, nml2FileName);
 
+
+        File nml2File = new File(nmlExportDir, nml2FileName);
         nep.writeStringToFile(nep.getCell().writeNeuroML_v2(), nml2File.getAbsolutePath());
-
         System.out.println("Saved NeuroML representation of the file to: "+nml2File.getAbsolutePath()+": "+nml2File.exists());
-
         validateXMLWithURL(nml2File, LATEST_NEUROML_V2_SCHEMA);
+
+        nml2FileName = nml2FileName.replace(".cell","_morphOnly.cell");
+        File nml2FileMorph = new File(nmlExportDir, nml2FileName);
+        nep.writeStringToFile(nep.getCell().writeNeuroML_v2_morphologyOnly(), nml2FileMorph.getAbsolutePath());
+        System.out.println("Saved NeuroML representation of the file to: "+nml2FileMorph.getAbsolutePath()+": "+nml2FileMorph.exists());
+        validateXMLWithURL(nml2FileMorph, LATEST_NEUROML_V2_SCHEMA);
         
     }
 
